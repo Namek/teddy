@@ -36,15 +36,15 @@ public class TeddyStateSystem extends EntitySystem {
 
 	@Override
 	protected void initialize() {
-		animStandingTexture = new Texture("tbear_standing.png");
+		animStandingTexture = new Texture("characters/tbear_standing.png");
 		animStandingFrames = TextureRegion.split(animStandingTexture, 90, 110)[0];
 		animStanding = new Animation(0.1f, animStandingFrames);
 		
-		animRunningTexture = new Texture("tbear_running.png");
+		animRunningTexture = new Texture("characters/tbear_running.png");
 		animRunningFrames = TextureRegion.split(animRunningTexture, 90, 110)[0];
 		animRunning = new Animation(0.1f, animRunningFrames);
 		
-		animWalkingTexture = new Texture("tbear_walking.png");
+		animWalkingTexture = new Texture("characters/tbear_walking.png");
 		animWalkingFrames = TextureRegion.split(animWalkingTexture, 90, 110)[0];
 		animWalking = new Animation(0.1f, animWalkingFrames);
 	}
