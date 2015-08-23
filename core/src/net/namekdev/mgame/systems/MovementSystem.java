@@ -18,7 +18,7 @@ public class MovementSystem extends EntityProcessingSystem {
 	final Vector2 tmp = new Vector2();
 	
 	public MovementSystem() {
-		super(Aspect.getAspectForAll(Movement.class, Position.class));
+		super(Aspect.all(Movement.class, Position.class));
 	}
 
 	@Override

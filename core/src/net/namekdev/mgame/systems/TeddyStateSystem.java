@@ -2,6 +2,7 @@ package net.namekdev.mgame.systems;
 
 import net.namekdev.mgame.components.AnimationComponent;
 import net.namekdev.mgame.components.Movement;
+import net.namekdev.mgame.components.Position;
 import net.namekdev.mgame.components.Teddy;
 
 import com.artemis.Aspect;
@@ -21,9 +22,12 @@ public class TeddyStateSystem extends EntitySystem {
 	static final float WALK_SPEED = 250f;
 	static final float RUN_SPEED = 550f;
 	
-	ComponentMapper<Teddy> tm;
 	ComponentMapper<AnimationComponent> am;
 	ComponentMapper<Movement> mm;
+	ComponentMapper<Position> pm;
+	ComponentMapper<Teddy> tm;
+
+	RenderSystem renderer;
 	
 	Texture animStandingTexture, animRunningTexture, animWalkingTexture;
 	TextureRegion[] animStandingFrames, animRunningFrames, animWalkingFrames;
@@ -89,6 +93,9 @@ public class TeddyStateSystem extends EntitySystem {
 		else {
 			anim.stateTime += world.delta;
 		}
+		
+		Position pos = pm.get(flyweight);
+		renderer.camera2d.position.x = pos.current.x;
 	}
 
 }

@@ -1,6 +1,7 @@
 package net.namekdev.mgame.scene;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.loaders.ModelLoader;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
@@ -17,31 +18,38 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.FloatAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.loader.ObjLoader;
 import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.TextureDescriptor;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.uwsoft.editor.renderer.Overlap2DStage;
 
 public class GameStage extends Overlap2DStage {
+	Camera camera3d;
 	ModelBatch modelBatch;
 	Environment environment;
 	
-	Model floorModel, wallModel;
+	Model floorModel, wallModel, tableModel;
 	Array<ModelInstance> modelInstances = new Array<ModelInstance>();
 	
-	Camera cam;
 	
-	public GameStage(ModelBatch modelBatch) {
+	public GameStage(ModelBatch modelBatch, Camera cam3d) {
 		initSceneLoader();
 		sceneLoader.loadScene("MainScene");
 		addActor(sceneLoader.getRoot());
 		
 		// 3d stuff
 		this.modelBatch = modelBatch;
-		cam = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		
+		this.camera3d = cam3d;
+
+		cam3d.position.set(0,6.61f,10f);
+		cam3d.direction.set(0,0,-1);
+		cam3d.far = 300;
+		cam3d.near = 0.1f;
+		cam3d.update();
 		
 		environment = new Environment();
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
@@ -104,7 +112,7 @@ public class GameStage extends Overlap2DStage {
 	    	);
 			mb.manage(wallTexturesAttrs[i].textureDescription.texture);
 		}
-		float x = -10, h = 30, w = 10, disp = 0.5f;
+		float x = -10, h = 30, w = 10, disp = 0f;
 		for (int i = 0; i < 11; ++i) {
 			MeshPartBuilder mpb = mb.part(
 				"wall" + i, GL20.GL_TRIANGLES, Usage.Position | Usage.Normal | Usage.TextureCoordinates, wallTextureMats[i%2]
@@ -124,12 +132,20 @@ public class GameStage extends Overlap2DStage {
 		ModelInstance wall = new ModelInstance(wallModel);
 		wall.transform.translate(0, 0, -10);
 		modelInstances.add(wall);
+		
+		
+		// table
+		ModelLoader loader = new ObjLoader();
+		tableModel = loader.loadModel(Gdx.files.internal("furniture/table.obj"));
+		ModelInstance table = new ModelInstance(tableModel);
+		table.transform.translate(10, 0, -4);
+		modelInstances.add(table);
 	}
 
 	@Override
 	public void dispose() {
 		Disposable[] disposables = new Disposable[] {
-			modelBatch, floorModel, wallModel
+			modelBatch, floorModel, wallModel, tableModel
 		};
 		
 		for (Disposable d : disposables) {
@@ -141,17 +157,16 @@ public class GameStage extends Overlap2DStage {
 
 	@Override
 	public void draw() {
-		cam.position.set(0,6.61f,10f);
-		cam.direction.set(0,0,-1);
-		cam.far = 300;
-		cam.near = 0.1f;
-		cam.update();
-	
-		modelBatch.begin(cam);
+		camera3d.update();
+		modelBatch.begin(camera3d);
 		modelBatch.render(modelInstances, environment);
 		modelBatch.end();
 		
-		super.draw();
+		Camera camera = getCamera();
+		camera.position.x = camera3d.position.x*39;
+		camera.update();
+		
+//		super.draw();
 	}
 	
 	
