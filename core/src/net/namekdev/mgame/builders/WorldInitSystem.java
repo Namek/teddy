@@ -76,7 +76,7 @@ public class WorldInitSystem extends BaseSystem {
 		teddyEdit.create(AnimationComponent.class);
 		teddyEdit.create(Renderable.class).setup(Renderable.DECAL, RenderLayers.FRONT);
 		teddyEdit.create(Transform.class).xyz(0.5f, 1.1f, -0.2f);
-		teddyEdit.create(Velocity.class).setup(MConstants.Teddy.MaxSpeed, MConstants.Teddy.Friction);
+		teddyEdit.create(Velocity.class).setup(MConstants.Teddy.MaxWalkSpeed, MConstants.Teddy.Friction);
 		setupDecal(teddyEdit, animStandingFrames[0]);
 		renderSystem.registerToDecalRenderer(teddyEdit.getEntity());
 	}

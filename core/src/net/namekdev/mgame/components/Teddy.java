@@ -10,11 +10,14 @@ public class Teddy extends Component {
 
 	public static final int LEFT = -1;
 	public static final int RIGHT = 1;
+	public static final int UP = 1;
+	public static final int DOWN = -1;
 	public static final int NONE = 0;
 
 
 	public int animState = STAND;
 	public int lookDir = RIGHT;
-	public int moveDir = NONE;
+	public int moveHorzDir = NONE;
+	public int moveVertDir = NONE;
 	public Animation animStanding, animRunning, animWalking;
 }

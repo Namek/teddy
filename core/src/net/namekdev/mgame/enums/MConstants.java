@@ -5,7 +5,10 @@ public interface MConstants {
 	public static final float DecalDimensionDepth = 0.1f;
 
 	public interface Teddy {
-		public static final float MaxSpeed = 6f;
-		public static final float Friction = 20f;
+		public static final float Acceleration = 160f;
+		public static final float MaxWalkSpeed = 6f;
+		public static final float MaxRunSpeed = MaxWalkSpeed*2.2f;
+		public static final float Friction = 60f;
+
 	}
 }
