@@ -1,17 +1,20 @@
 package net.namekdev.mgame.components;
 
 import com.artemis.Component;
+import com.badlogic.gdx.graphics.g2d.Animation;
 
 public class Teddy extends Component {
 	public static final int STAND = 1;
 	public static final int WALK = 2;
 	public static final int RUN = 3;
-	
+
 	public static final int LEFT = -1;
 	public static final int RIGHT = 1;
 	public static final int NONE = 0;
-	
+
+
 	public int animState = STAND;
 	public int lookDir = RIGHT;
 	public int moveDir = NONE;
+	public Animation animStanding, animRunning, animWalking;
 }

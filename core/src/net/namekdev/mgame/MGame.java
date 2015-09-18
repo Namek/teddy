@@ -1,15 +1,13 @@
 package net.namekdev.mgame;
 
-import net.namekdev.mgame.components.AnimationComponent;
-import net.namekdev.mgame.components.Movement;
-import net.namekdev.mgame.components.Position;
-import net.namekdev.mgame.components.Renderable;
-import net.namekdev.mgame.components.Teddy;
-import net.namekdev.mgame.systems.MovementSystem;
-import net.namekdev.mgame.systems.RenderSystemOld;
+import net.namekdev.mgame.builders.WorldInitSystem;
+import net.namekdev.mgame.systems.RenderSystem;
 import net.namekdev.mgame.systems.TeddyStateSystem;
+import net.namekdev.mgame.systems.TestSystem;
+import net.namekdev.mgame.systems.base.PositionSystem;
+import net.namekdev.mgame.systems.base.TimeSystem;
+import net.namekdev.mgame.systems.render.KeyframedDecalUpdateSystem;
 
-import com.artemis.EntityEdit;
 import com.artemis.World;
 import com.artemis.WorldConfiguration;
 import com.badlogic.gdx.ApplicationAdapter;
@@ -21,17 +19,14 @@ public class MGame extends ApplicationAdapter {
 	@Override
 	public void create () {
 		WorldConfiguration cfg = new WorldConfiguration();
+		cfg.setSystem(new WorldInitSystem());
+		cfg.setSystem(new TimeSystem());
 		cfg.setSystem(new TeddyStateSystem());
-		cfg.setSystem(new MovementSystem());
-		cfg.setSystem(new RenderSystemOld());
+		cfg.setSystem(new PositionSystem());
+		cfg.setSystem(new KeyframedDecalUpdateSystem());
+		cfg.setSystem(new RenderSystem());
+		cfg.setSystem(new TestSystem());
 		world = new World(cfg);
-
-		EntityEdit teddy = world.createEntity().edit();
-		teddy.create(Teddy.class);
-		teddy.create(AnimationComponent.class);
-		teddy.create(Renderable.class).type = Renderable.KEYFRAMES;
-		teddy.create(Position.class);
-		teddy.create(Movement.class);
 	}
 
 	@Override

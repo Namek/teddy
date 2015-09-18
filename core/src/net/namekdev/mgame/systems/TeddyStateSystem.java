@@ -1,9 +1,15 @@
 package net.namekdev.mgame.systems;
 
+import static net.namekdev.mgame.components.Teddy.LEFT;
+import static net.namekdev.mgame.components.Teddy.NONE;
+import static net.namekdev.mgame.components.Teddy.RIGHT;
+import static net.namekdev.mgame.components.Teddy.RUN;
+import static net.namekdev.mgame.components.Teddy.STAND;
+import static net.namekdev.mgame.components.Teddy.WALK;
 import net.namekdev.mgame.components.AnimationComponent;
-import net.namekdev.mgame.components.Movement;
-import net.namekdev.mgame.components.Position;
 import net.namekdev.mgame.components.Teddy;
+import net.namekdev.mgame.components.base.Transform;
+import net.namekdev.mgame.components.base.Velocity;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -11,11 +17,6 @@ import com.artemis.EntitySystem;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-
-import static net.namekdev.mgame.components.Teddy.*;
 
 @Wire
 public class TeddyStateSystem extends EntitySystem {
@@ -23,15 +24,9 @@ public class TeddyStateSystem extends EntitySystem {
 	static final float RUN_SPEED = 550f;
 
 	ComponentMapper<AnimationComponent> am;
-	ComponentMapper<Movement> mm;
-	ComponentMapper<Position> pm;
+	ComponentMapper<Transform> mTransform;
+	ComponentMapper<Velocity> mVelocity;
 	ComponentMapper<Teddy> tm;
-
-	RenderSystemOld renderer;
-
-	Texture animStandingTexture, animRunningTexture, animWalkingTexture;
-	TextureRegion[] animStandingFrames, animRunningFrames, animWalkingFrames;
-	Animation animStanding, animRunning, animWalking;
 
 
 	public TeddyStateSystem() {
@@ -40,17 +35,7 @@ public class TeddyStateSystem extends EntitySystem {
 
 	@Override
 	protected void initialize() {
-		animStandingTexture = new Texture("characters/tbear_standing.png");
-		animStandingFrames = TextureRegion.split(animStandingTexture, 90, 110)[0];
-		animStanding = new Animation(0.1f, animStandingFrames);
 
-		animRunningTexture = new Texture("characters/tbear_running.png");
-		animRunningFrames = TextureRegion.split(animRunningTexture, 90, 110)[0];
-		animRunning = new Animation(0.1f, animRunningFrames);
-
-		animWalkingTexture = new Texture("characters/tbear_walking.png");
-		animWalkingFrames = TextureRegion.split(animWalkingTexture, 90, 110)[0];
-		animWalking = new Animation(0.1f, animWalkingFrames);
 	}
 
 	@Override
@@ -58,32 +43,37 @@ public class TeddyStateSystem extends EntitySystem {
 		int teddyEntityId = subscription.getEntities().get(0);
 		Teddy state = tm.get(teddyEntityId);
 		AnimationComponent anim = am.get(teddyEntityId);
-		Movement move = mm.get(teddyEntityId);
+		Transform transform = mTransform.get(teddyEntityId);
+		Velocity velocity = mVelocity.get(teddyEntityId);
 
 		boolean hasChangedAnimDirection = false;
 		boolean canRun = Gdx.input.isKeyPressed(Keys.SHIFT_LEFT);
+
+		velocity.frictionOn = false;
 
 		if (Gdx.input.isKeyPressed(Keys.RIGHT) || Gdx.input.isKeyPressed(Keys.D)) {
 			hasChangedAnimDirection = state.lookDir != RIGHT;
 			state.lookDir = state.moveDir = RIGHT;
 			state.animState = canRun ? RUN : WALK;
-			anim.animation = canRun ? animRunning : animWalking;
+			anim.animation = canRun ? state.animRunning : state.animWalking;
 			anim.flipHorz = false;
-			move.speed.set(canRun ? RUN_SPEED : WALK_SPEED, 0);
+			velocity.acceleration.set(1, 0, 0).scl(canRun ? RUN_SPEED : WALK_SPEED);
 		}
 		else if (Gdx.input.isKeyPressed(Keys.LEFT) || Gdx.input.isKeyPressed(Keys.A)) {
 			hasChangedAnimDirection = state.lookDir != LEFT;
 			state.lookDir = state.moveDir = LEFT;
 			state.animState = canRun ? RUN : WALK;
-			anim.animation = canRun ? animRunning : animWalking;
+			anim.animation = canRun ? state.animRunning : state.animWalking;
 			anim.flipHorz = true;
-			move.speed.set(canRun ? -RUN_SPEED : -WALK_SPEED, 0);
+			velocity.acceleration.set(-1, 0, 0).scl(canRun ? RUN_SPEED : WALK_SPEED);
 		}
+		// TODO Keys.UP, Keys.DOWN
 		else {
 			state.moveDir = NONE;
 			state.animState = STAND;
-			move.speed.set(0, 0);
-			anim.animation = animStanding;
+			anim.animation = state.animStanding;
+			velocity.acceleration.set(0, 0, 0);
+			velocity.frictionOn = true;
 		}
 
 
@@ -94,8 +84,9 @@ public class TeddyStateSystem extends EntitySystem {
 			anim.stateTime += world.delta;
 		}
 
-		Position pos = pm.get(teddyEntityId);
-		renderer.camera2d.position.x = pos.current.x;
+
+		// TODO CameraCenter component
+//		renderer.camera2d.position.x = pos.current.x;
 	}
 
 }
