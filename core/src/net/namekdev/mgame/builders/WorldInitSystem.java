@@ -193,7 +193,7 @@ public class WorldInitSystem extends BaseSystem {
 		Decal decal = Decal.newDecal(width, height, texture, true);
 		DecalComponent decalComponent = edit.create(DecalComponent.class);
 		decalComponent.decal = decal;
-		decalComponent.lookAtCamera = true;
+		decalComponent.lookAtCamera = false;
 
 		edit.create(Dimensions.class).set(width, height, MConstants.DecalDimensionDepth);
 	}
