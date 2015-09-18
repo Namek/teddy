@@ -7,10 +7,12 @@ public class AnimationComponent extends PooledComponent {
 	public Animation animation;
 	public float stateTime;
 	public boolean flipHorz;
-	
+
 
 	@Override
 	protected void reset() {
-		
+		animation = null;
+		stateTime = 0;
+		flipHorz = false;
 	}
 }

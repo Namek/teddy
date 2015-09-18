@@ -19,6 +19,11 @@ public class Renderable extends PooledComponent {
     public int type = NONE;
 
 
+    public void setup(int type, int layer) {
+    	this.type = type;
+    	this.layer = layer;
+    }
+
 	@Override
 	protected void reset() {
 		type = NONE;

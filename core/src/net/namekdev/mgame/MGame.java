@@ -1,6 +1,7 @@
 package net.namekdev.mgame;
 
 import net.namekdev.mgame.builders.WorldInitSystem;
+import net.namekdev.mgame.systems.MovementSystem;
 import net.namekdev.mgame.systems.RenderSystem;
 import net.namekdev.mgame.systems.TeddyStateSystem;
 import net.namekdev.mgame.systems.TestSystem;
@@ -23,6 +24,7 @@ public class MGame extends ApplicationAdapter {
 		cfg.setSystem(new TimeSystem());
 		cfg.setSystem(new TeddyStateSystem());
 		cfg.setSystem(new PositionSystem());
+		cfg.setSystem(new MovementSystem());
 		cfg.setSystem(new KeyframedDecalUpdateSystem());
 		cfg.setSystem(new RenderSystem());
 		cfg.setSystem(new TestSystem());

@@ -43,7 +43,7 @@ public class DecalRenderer implements EntityProcessAgent  {
 			decal.lookAt(camera.position, camera.up);
 		}
 		else {
-			decal.lookAt(transform.direction.add(camera.position), transform.up);
+
 			//throw new UnsupportedOperationException("Todo: set up vector based on orientation");
 		}
 		batch.add(decal);

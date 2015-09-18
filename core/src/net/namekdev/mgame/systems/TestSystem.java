@@ -9,6 +9,7 @@ public class TestSystem extends BaseSystem {
 
 	@Override
 	protected void processSystem() {
+//		renderSystem.camera.position.x = 5;
 	}
 
 }

@@ -6,6 +6,8 @@ package net.namekdev.mgame.systems.render;
  * @author Namek
  */
 //import net.mostlyoriginal.api.utils.BagUtils;
+import java.util.Comparator;
+
 import net.namekdev.mgame.components.Renderable;
 
 import com.artemis.BaseSystem;
@@ -91,23 +93,8 @@ public class RenderBatchingSystem extends BaseSystem {
 	protected void processSystem() {
 		if (sortedDirty) {
 			// sort our jobs (by layer).
+			sortedJobs.sort(jobComparator);
 			sortedDirty = false;
-
-			// TODO uncomment and remove sort algorithm?
-//			BagUtils.sort(sortedJobs);
-
-			for (int i = 0, n = sortedJobs.size(); i < n; ++i) {
-				final Job jobLeft = sortedJobs.get(i);
-
-				for (int j = i; j < n; ++j) {
-					final Job jobRight = sortedJobs.get(j);
-
-					if (jobLeft.compareTo(jobRight) < 0) {
-						sortedJobs.set(i, jobRight);
-						sortedJobs.set(j, jobLeft);
-					}
-				}
-			}
 		}
 
 		// iterate through all the jobs.
@@ -156,8 +143,15 @@ public class RenderBatchingSystem extends BaseSystem {
 		return true;
 	}
 
+	protected final Comparator<Job> jobComparator = new Comparator<RenderBatchingSystem.Job>() {
+		@Override
+		public int compare(Job o1, Job o2) {
+			return mRenderable.get(o1.entityId).layer - mRenderable.get(o2.entityId).layer;
+		}
+	};
+
 	/** Rendering job wrapper. */
-	public class Job implements Comparable<Job> {
+	public class Job {
 		public final int entityId;
 		public final EntityProcessAgent agent;
 
@@ -168,11 +162,6 @@ public class RenderBatchingSystem extends BaseSystem {
 		public Job(final int entityId, final EntityProcessAgent agent) {
 			this.entityId = entityId;
 			this.agent = agent;
-		}
-
-		@Override
-		public int compareTo(Job o) {
-			return mRenderable.get(this.entityId).layer - mRenderable.get(o.entityId).layer;
 		}
 	}
 
