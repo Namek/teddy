@@ -9,6 +9,7 @@ import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.EntitySystem;
 import com.artemis.annotations.Wire;
+import com.artemis.utils.IntBag;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
@@ -25,7 +26,7 @@ public class RenderSystem extends EntitySystem {
 	ComponentMapper<AnimationComponent> am;
 	ComponentMapper<Position> pm;
 	ComponentMapper<Renderable> rm;
-	
+
 	SpriteBatch batch;
 	ModelBatch batch3d;
 	Camera camera2d, camera3d;
@@ -47,6 +48,8 @@ public class RenderSystem extends EntitySystem {
 
 	@Override
 	protected void processSystem() {
+		final IntBag actives = subscription.getEntities();
+
 		Gdx.gl.glClearColor(0.1f, 0, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
@@ -63,15 +66,15 @@ public class RenderSystem extends EntitySystem {
 		batch.begin();
 
 		for (int i = 0, n = actives.size(); i < n; ++i) {
-			flyweight.id = actives.get(i);
-			
-			Renderable renderable = rm.get(flyweight);
-			
+			int entityId = actives.get(i);
+
+			Renderable renderable = rm.get(entityId);
+
 			switch (renderable.type) {
 				case Renderable.KEYFRAMES: {
-					AnimationComponent anim = am.get(flyweight);
+					AnimationComponent anim = am.get(entityId);
 					TextureRegion frame = anim.animation.getKeyFrame(anim.stateTime, true);
-					Position position = pm.get(flyweight);
+					Position position = pm.get(entityId);
 
 					float hw = Gdx.graphics.getWidth()/2;
 					float hh = Gdx.graphics.getHeight()/2;
@@ -88,7 +91,7 @@ public class RenderSystem extends EntitySystem {
 				}
 			}
 		}
-		
+
 		batch.end();
 	}
 

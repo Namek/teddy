@@ -6,11 +6,12 @@ import net.namekdev.mgame.components.Position;
 import net.namekdev.mgame.components.Renderable;
 import net.namekdev.mgame.components.Teddy;
 import net.namekdev.mgame.systems.MovementSystem;
-import net.namekdev.mgame.systems.RenderSystem;
+import net.namekdev.mgame.systems.RenderSystemOld;
 import net.namekdev.mgame.systems.TeddyStateSystem;
 
 import com.artemis.EntityEdit;
 import com.artemis.World;
+import com.artemis.WorldConfiguration;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 
@@ -19,12 +20,12 @@ public class MGame extends ApplicationAdapter {
 
 	@Override
 	public void create () {
-		world = new World();
-		world.setSystem(new TeddyStateSystem());
-		world.setSystem(new MovementSystem());
-		world.setSystem(new RenderSystem());
-		world.initialize();
-		
+		WorldConfiguration cfg = new WorldConfiguration();
+		cfg.setSystem(new TeddyStateSystem());
+		cfg.setSystem(new MovementSystem());
+		cfg.setSystem(new RenderSystemOld());
+		world = new World(cfg);
+
 		EntityEdit teddy = world.createEntity().edit();
 		teddy.create(Teddy.class);
 		teddy.create(AnimationComponent.class);

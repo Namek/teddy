@@ -21,33 +21,33 @@ import static net.namekdev.mgame.components.Teddy.*;
 public class TeddyStateSystem extends EntitySystem {
 	static final float WALK_SPEED = 250f;
 	static final float RUN_SPEED = 550f;
-	
+
 	ComponentMapper<AnimationComponent> am;
 	ComponentMapper<Movement> mm;
 	ComponentMapper<Position> pm;
 	ComponentMapper<Teddy> tm;
 
-	RenderSystem renderer;
-	
+	RenderSystemOld renderer;
+
 	Texture animStandingTexture, animRunningTexture, animWalkingTexture;
 	TextureRegion[] animStandingFrames, animRunningFrames, animWalkingFrames;
 	Animation animStanding, animRunning, animWalking;
-	
+
 
 	public TeddyStateSystem() {
 		super(Aspect.all(Teddy.class));
-	}	
+	}
 
 	@Override
 	protected void initialize() {
 		animStandingTexture = new Texture("characters/tbear_standing.png");
 		animStandingFrames = TextureRegion.split(animStandingTexture, 90, 110)[0];
 		animStanding = new Animation(0.1f, animStandingFrames);
-		
+
 		animRunningTexture = new Texture("characters/tbear_running.png");
 		animRunningFrames = TextureRegion.split(animRunningTexture, 90, 110)[0];
 		animRunning = new Animation(0.1f, animRunningFrames);
-		
+
 		animWalkingTexture = new Texture("characters/tbear_walking.png");
 		animWalkingFrames = TextureRegion.split(animWalkingTexture, 90, 110)[0];
 		animWalking = new Animation(0.1f, animWalkingFrames);
@@ -55,11 +55,11 @@ public class TeddyStateSystem extends EntitySystem {
 
 	@Override
 	protected void processSystem() {
-		flyweight.id = actives.get(0);
-		Teddy state = tm.get(flyweight);
-		AnimationComponent anim = am.get(flyweight);
-		Movement move = mm.get(flyweight);
-		
+		int teddyEntityId = subscription.getEntities().get(0);
+		Teddy state = tm.get(teddyEntityId);
+		AnimationComponent anim = am.get(teddyEntityId);
+		Movement move = mm.get(teddyEntityId);
+
 		boolean hasChangedAnimDirection = false;
 		boolean canRun = Gdx.input.isKeyPressed(Keys.SHIFT_LEFT);
 
@@ -93,8 +93,8 @@ public class TeddyStateSystem extends EntitySystem {
 		else {
 			anim.stateTime += world.delta;
 		}
-		
-		Position pos = pm.get(flyweight);
+
+		Position pos = pm.get(teddyEntityId);
 		renderer.camera2d.position.x = pos.current.x;
 	}
 
