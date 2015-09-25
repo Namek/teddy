@@ -1,9 +1,11 @@
 package net.namekdev.mgame.builders;
 
 import net.namekdev.mgame.components.AnimationComponent;
+import net.namekdev.mgame.components.CameraPOI;
 import net.namekdev.mgame.components.Renderable;
 import net.namekdev.mgame.components.Teddy;
 import net.namekdev.mgame.components.base.Dimensions;
+import net.namekdev.mgame.components.base.Force;
 import net.namekdev.mgame.components.base.Transform;
 import net.namekdev.mgame.components.base.Velocity;
 import net.namekdev.mgame.components.render.DecalComponent;
@@ -43,9 +45,6 @@ public class WorldInitSystem extends BaseSystem {
 
 	@Override
 	protected void processSystem() {
-		renderSystem.camera.position.set(0, 5, 6);
-		renderSystem.camera.direction.set(0, 0, -1);
-
 		createTeddy();
 		createRoom();
 
@@ -75,8 +74,13 @@ public class WorldInitSystem extends BaseSystem {
 
 		teddyEdit.create(AnimationComponent.class);
 		teddyEdit.create(Renderable.class).setup(Renderable.DECAL, RenderLayers.FRONT);
-		teddyEdit.create(Transform.class).xyz(0.5f, 1.1f, -0.2f);
-		teddyEdit.create(Velocity.class).setup(MConstants.Teddy.MaxWalkSpeed, MConstants.Teddy.Friction);
+		teddyEdit.create(Transform.class).xyz(0.5f, 10.1f, -0.2f);
+		teddyEdit.create(Velocity.class)
+			.setup(MConstants.Teddy.MaxWalkSpeed, MConstants.Teddy.Friction)
+			.maxExtSpeed = MConstants.Teddy.MaxJumpSpeed;
+		teddyEdit.create(Force.class);
+		teddyEdit.create(CameraPOI.class);
+
 		setupDecal(teddyEdit, animStandingFrames[0]);
 		renderSystem.registerToDecalRenderer(teddyEdit.getEntity());
 	}

@@ -7,24 +7,23 @@ import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 
 /**
- * Manages both global time (slow motion etc.) and calls time updaters for entities. 
- * 
+ * Manages both global time (slow motion etc.) and calls time updaters for entities.
+ *
  * @author Namek
  * @see TimeUpdate
  */
 @Wire
 public class TimeSystem extends EntityProcessingSystem {
 	ComponentMapper<TimeUpdate> mTimeUpdate;
-	
+
 	public static float MIN_DELTA = 1/15f;
 	private float deltaTime, deltaTimeModified;
 
 	public float timeSpeedFactor = 1f;
-	
+
 
 	public TimeSystem() {
 		super(Aspect.all(TimeUpdate.class));
@@ -37,7 +36,7 @@ public class TimeSystem extends EntityProcessingSystem {
 	public float getRealTimeDelta() {
 		return deltaTime;
 	}
-	
+
 	public float getDeltaTime(boolean modifiedByTimeFactor) {
 		return modifiedByTimeFactor ? deltaTimeModified : deltaTime;
 	}
@@ -46,11 +45,11 @@ public class TimeSystem extends EntityProcessingSystem {
 		TimeUpdate time = mTimeUpdate.get(e);
 		return getDeltaTime(time != null ? time.dependsOnTimeFactor : false);
 	}
-	
+
 
 	@Override
 	protected void begin() {
-		deltaTime = Gdx.graphics.getDeltaTime();
+		deltaTime = world.getDelta();
 		deltaTimeModified = deltaTime * timeSpeedFactor;
 		world.setDelta(MathUtils.clamp(deltaTimeModified, 0, MIN_DELTA));
 	}

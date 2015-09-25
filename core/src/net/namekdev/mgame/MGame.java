@@ -1,6 +1,7 @@
 package net.namekdev.mgame;
 
 import net.namekdev.mgame.builders.WorldInitSystem;
+import net.namekdev.mgame.systems.CameraSystem;
 import net.namekdev.mgame.systems.MovementSystem;
 import net.namekdev.mgame.systems.RenderSystem;
 import net.namekdev.mgame.systems.TeddyStateSystem;
@@ -25,6 +26,7 @@ public class MGame extends ApplicationAdapter {
 		cfg.setSystem(new TeddyStateSystem());
 		cfg.setSystem(new PositionSystem());
 		cfg.setSystem(new MovementSystem());
+		cfg.setSystem(new CameraSystem());
 		cfg.setSystem(new KeyframedDecalUpdateSystem());
 		cfg.setSystem(new RenderSystem());
 		cfg.setSystem(new TestSystem());
@@ -33,7 +35,7 @@ public class MGame extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-		world.delta = Gdx.graphics.getDeltaTime();
+		world.delta = Math.min(1/15f, Gdx.graphics.getDeltaTime());
 		world.process();
 	}
 }
