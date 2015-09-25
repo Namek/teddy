@@ -15,18 +15,6 @@ public class RenderSystem extends net.namekdev.mgame.systems.render.BaseRenderSy
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 
-//		Entity entity = tagManager.getEntity(Tags.PLAYER);
-//		Transform transform = mTransform.get(entity);
-
-//		camera.position
-//			.set(transform.currentPos)
-//			.add(transform.displacement);
-//			.add(0, player.eyeAltitude, 0);
-
-//		camera.direction.set(transform.direction);
-//		camera.up.set(transform.up);
-
-
 		super.processSystem();
 	}
 
