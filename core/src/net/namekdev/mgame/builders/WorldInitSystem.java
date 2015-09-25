@@ -37,6 +37,7 @@ import com.badlogic.gdx.graphics.g3d.loader.ObjLoader;
 import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.TextureDescriptor;
+import com.badlogic.gdx.math.Vector2;
 
 @Wire
 public class WorldInitSystem extends BaseSystem {
@@ -74,7 +75,7 @@ public class WorldInitSystem extends BaseSystem {
 
 		teddyEdit.create(AnimationComponent.class);
 		teddyEdit.create(Renderable.class).setup(Renderable.DECAL, RenderLayers.FRONT);
-		teddyEdit.create(Transform.class).xyz(0.5f, 10.1f, -0.2f);
+		teddyEdit.create(Transform.class).xyz(0.5f, 0f, -0.2f);
 		teddyEdit.create(Velocity.class)
 			.setup(MConstants.Teddy.MaxWalkSpeed, MConstants.Teddy.Friction)
 			.maxExtSpeed = MConstants.Teddy.MaxJumpSpeed;

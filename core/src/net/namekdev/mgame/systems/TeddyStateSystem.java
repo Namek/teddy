@@ -25,8 +25,7 @@ public class TeddyStateSystem extends EntitySystem {
 
 	RenderSystem renderSystem;
 
-	// TODO temporal thing
-	static final float floorHeight = 1.1f;
+	static final float floorHeight = 0f;
 
 
 	public TeddyStateSystem() {
