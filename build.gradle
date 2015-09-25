@@ -16,7 +16,7 @@ allprojects {
     version = '1.0'
     ext {
         appName = 'mgame'
-        artemisVersion = '0.13.0'
+        artemisVersion = '0.13.1'
         gdxVersion = '1.6.5'
         roboVMVersion = '1.0.0'
         box2DLightsVersion = '1.3'
