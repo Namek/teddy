@@ -1,5 +1,6 @@
 package net.namekdev.mgame;
 
+import net.namekdev.mgame.builders.EntityFactory;
 import net.namekdev.mgame.builders.WorldInitSystem;
 import net.namekdev.mgame.systems.CameraSystem;
 import net.namekdev.mgame.systems.MovementSystem;
@@ -21,6 +22,7 @@ public class MGame extends ApplicationAdapter {
 	@Override
 	public void create () {
 		WorldConfiguration cfg = new WorldConfiguration();
+		cfg.setSystem(new EntityFactory());
 		cfg.setSystem(new WorldInitSystem());
 		cfg.setSystem(new TimeSystem());
 		cfg.setSystem(new TeddyStateSystem());
