@@ -3,12 +3,14 @@ package net.namekdev.mgame;
 import net.namekdev.mgame.builders.EntityFactory;
 import net.namekdev.mgame.builders.WorldInitSystem;
 import net.namekdev.mgame.systems.CameraSystem;
+import net.namekdev.mgame.systems.CollisionSystem;
 import net.namekdev.mgame.systems.MovementSystem;
 import net.namekdev.mgame.systems.RenderSystem;
 import net.namekdev.mgame.systems.TeddyStateSystem;
 import net.namekdev.mgame.systems.TestSystem;
 import net.namekdev.mgame.systems.base.PositionSystem;
 import net.namekdev.mgame.systems.base.TimeSystem;
+import net.namekdev.mgame.systems.base.events.EventSystem;
 import net.namekdev.mgame.systems.render.KeyframedDecalUpdateSystem;
 
 import com.artemis.World;
@@ -23,10 +25,12 @@ public class MGame extends ApplicationAdapter {
 	public void create () {
 		WorldConfiguration cfg = new WorldConfiguration();
 		cfg.setSystem(new EntityFactory());
+		cfg.setSystem(new EventSystem());
 		cfg.setSystem(new WorldInitSystem());
 		cfg.setSystem(new TimeSystem());
 		cfg.setSystem(new TeddyStateSystem());
 		cfg.setSystem(new PositionSystem());
+		cfg.setSystem(new CollisionSystem());
 		cfg.setSystem(new MovementSystem());
 		cfg.setSystem(new CameraSystem());
 		cfg.setSystem(new KeyframedDecalUpdateSystem());

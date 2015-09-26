@@ -1,5 +1,8 @@
 package net.namekdev.mgame.builders;
 
+import net.namekdev.mgame.enums.CollisionGroups;
+import net.namekdev.mgame.systems.base.collision.CollisionDetectionSystem;
+
 import com.artemis.BaseSystem;
 import com.artemis.Entity;
 import com.artemis.annotations.Wire;
@@ -8,11 +11,14 @@ import com.badlogic.gdx.math.Vector3;
 @Wire
 public class WorldInitSystem extends BaseSystem {
 	EntityFactory entityFactory;
+	CollisionDetectionSystem collisionSystem;
 
 
 	@Override
 	protected void processSystem() {
 		Vector3 vect3 = new Vector3();
+
+		collisionSystem.relations.connectGroups(CollisionGroups.DEFAULT, CollisionGroups.DEFAULT);
 
 		entityFactory.createTeddy(vect3.set(0.5f, 0f, -0.2f));
 		entityFactory.createRoom();

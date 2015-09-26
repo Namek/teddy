@@ -78,6 +78,8 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
         compile "com.badlogicgames.box2dlights:box2dlights:$box2DLightsVersion"
         compile "com.underwaterapps.overlap2druntime:overlap2d-runtime-libgdx:0.0.8"
+        compile "net.mostlyoriginal.artemis-odb:contrib-core:1.0.0"
+        compile "net.mostlyoriginal.artemis-odb:contrib-eventbus:1.0.0"
     }
 }
 

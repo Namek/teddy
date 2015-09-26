@@ -11,9 +11,11 @@ import net.namekdev.mgame.components.base.Velocity;
 import net.namekdev.mgame.components.render.DecalComponent;
 import net.namekdev.mgame.components.render.ModelSetComponent;
 import net.namekdev.mgame.enums.Assets;
+import net.namekdev.mgame.enums.CollisionGroups;
 import net.namekdev.mgame.enums.MConstants;
 import net.namekdev.mgame.enums.RenderLayers;
 import net.namekdev.mgame.systems.RenderSystem;
+import net.namekdev.mgame.systems.base.collision.Collider;
 
 import com.artemis.BaseSystem;
 import com.artemis.Entity;
@@ -91,6 +93,7 @@ public class EntityFactory extends BaseSystem {
 			.maxExtSpeed = MConstants.Teddy.MaxJumpSpeed;
 		teddyEdit.create(Force.class);
 		teddyEdit.create(CameraPOI.class);
+		teddyEdit.create(Collider.class).groups(CollisionGroups.DEFAULT);
 
 		setupDecal(teddyEdit, animStandingFrames[0]);
 	}
@@ -99,6 +102,7 @@ public class EntityFactory extends BaseSystem {
 		TextureRegion texture = toysAtlas.findRegion(name);
 		EntityEdit edit = world.createEntity().edit();
 		edit.create(Transform.class).xyz(position);
+		edit.create(Collider.class).groups(CollisionGroups.DEFAULT);
 
 		setupDecal(edit, texture);
 
