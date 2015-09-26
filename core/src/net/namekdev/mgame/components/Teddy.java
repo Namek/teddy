@@ -21,5 +21,5 @@ public class Teddy extends Component {
 	public int moveVertDir = NONE;
 	public Animation animStanding, animRunning, animWalking;
 
-	public int carriedEntityId = NONE;
+	public int carriedEntityId = -1;
 }

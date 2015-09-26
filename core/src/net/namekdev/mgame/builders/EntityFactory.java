@@ -7,6 +7,7 @@ import net.namekdev.mgame.components.Renderable;
 import net.namekdev.mgame.components.Teddy;
 import net.namekdev.mgame.components.base.Dimensions;
 import net.namekdev.mgame.components.base.Force;
+import net.namekdev.mgame.components.base.Gravity;
 import net.namekdev.mgame.components.base.Transform;
 import net.namekdev.mgame.components.base.Velocity;
 import net.namekdev.mgame.components.render.DecalComponent;
@@ -104,6 +105,8 @@ public class EntityFactory extends BaseSystem {
 		EntityEdit edit = world.createEntity().edit();
 		edit.create(Transform.class).xyz(position);
 		edit.create(Collider.class).groups(CollisionGroups.TOYS);
+		edit.create(Velocity.class);
+		edit.create(Gravity.class).maxSpeed = 7;
 
 		if (isCarryable) {
 			edit.create(Carryable.class);

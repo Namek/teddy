@@ -1,12 +1,19 @@
 package net.namekdev.mgame.systems;
 
 import static net.namekdev.mgame.components.Teddy.*;
+import static net.namekdev.mgame.systems.base.collision.messaging.CollisionEvent.*;
+import net.mostlyoriginal.api.event.common.Subscribe;
+import net.namekdev.mgame.ToyCollisionEvent;
 import net.namekdev.mgame.components.AnimationComponent;
 import net.namekdev.mgame.components.Teddy;
+import net.namekdev.mgame.components.base.Attached;
+import net.namekdev.mgame.components.base.Dimensions;
 import net.namekdev.mgame.components.base.Force;
 import net.namekdev.mgame.components.base.Transform;
 import net.namekdev.mgame.components.base.Velocity;
 import net.namekdev.mgame.enums.MConstants;
+import net.namekdev.mgame.systems.base.AttachmentSystem;
+import net.namekdev.mgame.systems.base.collision.messaging.CollisionEvent;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -25,12 +32,15 @@ public class TeddyStateSystem extends EntitySystem {
 	ComponentMapper<Velocity> mVelocity;
 	ComponentMapper<Force> mForce;
 	ComponentMapper<Teddy> tm;
+	ComponentMapper<Dimensions> mDimensions;
 
+	AttachmentSystem attachmentSystem;
 	RenderSystem renderSystem;
 
 	static final float floorHeight = 0f;
 
 	public int teddyEntityId;
+	public Entity teddyEntity;
 	public Teddy state;
 
 
@@ -41,6 +51,7 @@ public class TeddyStateSystem extends EntitySystem {
 	@Override
 	protected void inserted(int entityId) {
 		teddyEntityId = entityId;
+		teddyEntity = world.getEntity(teddyEntityId);
 		state = tm.get(entityId);
 	}
 
@@ -116,9 +127,14 @@ public class TeddyStateSystem extends EntitySystem {
 
 		if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
 			force.extForce.y = transform.currentPos.y > floorHeight ? 2000 : 1000;
+			dropToy();
 		}
 		else {
 			force.extForce.y = transform.currentPos.y > floorHeight + 1.4f ? -60 : -1;
+		}
+
+		if (Gdx.input.isKeyJustPressed(Keys.E)) {
+			dropToy();
 		}
 
 
@@ -130,6 +146,32 @@ public class TeddyStateSystem extends EntitySystem {
 		}
 		else {
 			anim.stateTime += world.delta*0.4f;
+		}
+	}
+
+	@Subscribe
+	public void onToyCollided(ToyCollisionEvent evt) {
+		if (state.carriedEntityId >= 0) {
+			return;
+		}
+
+		attachToy(evt.toyId);
+	}
+
+	public void attachToy(int toyId) {
+		if (state.carriedEntityId >= 0) {
+			dropToy();
+		}
+
+		attachmentSystem.attach(toyId, teddyEntityId);
+		state.carriedEntityId = toyId;
+	}
+
+	private void dropToy() {
+		if (state.carriedEntityId >= 0) {
+			int toyId = state.carriedEntityId;
+			attachmentSystem.deattach(toyId);
+			state.carriedEntityId = -1;
 		}
 	}
 }
