@@ -8,6 +8,7 @@ import net.namekdev.mgame.systems.MovementSystem;
 import net.namekdev.mgame.systems.RenderSystem;
 import net.namekdev.mgame.systems.TeddyStateSystem;
 import net.namekdev.mgame.systems.TestSystem;
+import net.namekdev.mgame.systems.base.AttachmentSystem;
 import net.namekdev.mgame.systems.base.PositionSystem;
 import net.namekdev.mgame.systems.base.TimeSystem;
 import net.namekdev.mgame.systems.base.events.EventSystem;
@@ -30,6 +31,7 @@ public class MGame extends ApplicationAdapter {
 		cfg.setSystem(new TimeSystem());
 		cfg.setSystem(new TeddyStateSystem());
 		cfg.setSystem(new PositionSystem());
+		cfg.setSystem(new AttachmentSystem());
 		cfg.setSystem(new CollisionSystem());
 		cfg.setSystem(new MovementSystem());
 		cfg.setSystem(new CameraSystem());

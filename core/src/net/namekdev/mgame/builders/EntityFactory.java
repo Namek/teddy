@@ -2,6 +2,7 @@ package net.namekdev.mgame.builders;
 
 import net.namekdev.mgame.components.AnimationComponent;
 import net.namekdev.mgame.components.CameraPOI;
+import net.namekdev.mgame.components.Carryable;
 import net.namekdev.mgame.components.Renderable;
 import net.namekdev.mgame.components.Teddy;
 import net.namekdev.mgame.components.base.Dimensions;
@@ -93,7 +94,7 @@ public class EntityFactory extends BaseSystem {
 			.maxExtSpeed = MConstants.Teddy.MaxJumpSpeed;
 		teddyEdit.create(Force.class);
 		teddyEdit.create(CameraPOI.class);
-		teddyEdit.create(Collider.class).groups(CollisionGroups.DEFAULT);
+		teddyEdit.create(Collider.class).groups(CollisionGroups.TEDDY);
 
 		setupDecal(teddyEdit, animStandingFrames[0]);
 	}
@@ -102,7 +103,8 @@ public class EntityFactory extends BaseSystem {
 		TextureRegion texture = toysAtlas.findRegion(name);
 		EntityEdit edit = world.createEntity().edit();
 		edit.create(Transform.class).xyz(position);
-		edit.create(Collider.class).groups(CollisionGroups.DEFAULT);
+		edit.create(Collider.class).groups(CollisionGroups.TOYS);
+		edit.create(Carryable.class);
 
 		setupDecal(edit, texture);
 

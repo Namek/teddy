@@ -18,7 +18,7 @@ public class WorldInitSystem extends BaseSystem {
 	protected void processSystem() {
 		Vector3 vect3 = new Vector3();
 
-		collisionSystem.relations.connectGroups(CollisionGroups.DEFAULT, CollisionGroups.DEFAULT);
+		collisionSystem.relations.connectGroups(CollisionGroups.TEDDY, CollisionGroups.TOYS);
 
 		entityFactory.createTeddy(vect3.set(0.5f, 0f, -0.2f));
 		entityFactory.createRoom();
