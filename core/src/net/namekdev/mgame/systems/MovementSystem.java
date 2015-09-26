@@ -15,7 +15,7 @@ public class MovementSystem extends EntityProcessingSystem {
 	ComponentMapper<Velocity> mVelocity;
 
 	public MovementSystem() {
-		super(Aspect.all(Transform.class));
+		super(Aspect.all(Transform.class, Velocity.class));
 	}
 
 	@Override

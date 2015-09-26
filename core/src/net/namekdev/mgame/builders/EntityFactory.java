@@ -10,14 +10,17 @@ import net.namekdev.mgame.components.base.Transform;
 import net.namekdev.mgame.components.base.Velocity;
 import net.namekdev.mgame.components.render.DecalComponent;
 import net.namekdev.mgame.components.render.ModelSetComponent;
+import net.namekdev.mgame.enums.Assets;
 import net.namekdev.mgame.enums.MConstants;
 import net.namekdev.mgame.enums.RenderLayers;
 import net.namekdev.mgame.systems.RenderSystem;
 
 import com.artemis.BaseSystem;
+import com.artemis.Entity;
 import com.artemis.EntityEdit;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.ModelLoader;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -25,6 +28,7 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -37,18 +41,31 @@ import com.badlogic.gdx.graphics.g3d.loader.ObjLoader;
 import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.TextureDescriptor;
+import com.badlogic.gdx.math.Vector3;
 
 @Wire
 public class EntityFactory extends BaseSystem {
 	RenderSystem renderSystem;
+	AssetManager assetManager;
+
+	TextureAtlas toysAtlas;
 
 
 	@Override
 	protected void processSystem() {
+		assetManager = new AssetManager();
+		toysAtlas = loadAsset(Assets.Textures.Toys, TextureAtlas.class);
+
 		setPassive(true);
 	}
 
-	public void createTeddy() {
+	<T> T loadAsset(String filename, Class<T> type) {
+		assetManager.load(filename, type);
+		assetManager.finishLoading();
+		return assetManager.get(filename);
+	}
+
+	public void createTeddy(Vector3 position) {
 		EntityEdit teddyEdit = world.createEntity().edit();
 		Teddy teddy = teddyEdit.create(Teddy.class);
 
@@ -68,8 +85,7 @@ public class EntityFactory extends BaseSystem {
 		teddy.animWalking = new Animation(0.1f, animWalkingFrames);
 
 		teddyEdit.create(AnimationComponent.class);
-		teddyEdit.create(Renderable.class).setup(Renderable.DECAL, RenderLayers.FRONT);
-		teddyEdit.create(Transform.class).xyz(0.5f, 0f, -0.2f);
+		teddyEdit.create(Transform.class).xyz(position);
 		teddyEdit.create(Velocity.class)
 			.setup(MConstants.Teddy.MaxWalkSpeed, MConstants.Teddy.Friction)
 			.maxExtSpeed = MConstants.Teddy.MaxJumpSpeed;
@@ -77,7 +93,16 @@ public class EntityFactory extends BaseSystem {
 		teddyEdit.create(CameraPOI.class);
 
 		setupDecal(teddyEdit, animStandingFrames[0]);
-		renderSystem.registerToDecalRenderer(teddyEdit.getEntity());
+	}
+
+	public Entity createToy(String name, Vector3 position) {
+		TextureRegion texture = toysAtlas.findRegion(name);
+		EntityEdit edit = world.createEntity().edit();
+		edit.create(Transform.class).xyz(position);
+
+		setupDecal(edit, texture);
+
+		return edit.getEntity();
 	}
 
 	public void createRoom() {
@@ -195,5 +220,8 @@ public class EntityFactory extends BaseSystem {
 		decalComponent.lookAtCamera = false;
 
 		edit.create(Dimensions.class).set(width, height, MConstants.DecalDimensionDepth);
+		edit.create(Renderable.class).setup(Renderable.DECAL, RenderLayers.FRONT);
+
+		renderSystem.registerToDecalRenderer(edit.getEntity());
 	}
 }

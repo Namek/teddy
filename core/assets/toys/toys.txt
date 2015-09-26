@@ -1,0 +1,25 @@
+toys.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+airplane
+  rotate: false
+  xy: 2, 2
+  size: 75, 65
+  orig: 100, 75
+  offset: 14, 5
+  index: -1
+alien
+  rotate: false
+  xy: 79, 2
+  size: 100, 81
+  orig: 100, 81
+  offset: 0, 0
+  index: -1
+workbench
+  rotate: false
+  xy: 2, 85
+  size: 226, 250
+  orig: 250, 250
+  offset: 9, 0
+  index: -1
