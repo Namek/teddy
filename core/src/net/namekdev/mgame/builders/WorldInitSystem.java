@@ -23,9 +23,9 @@ public class WorldInitSystem extends BaseSystem {
 		entityFactory.createTeddy(vect3.set(0.5f, 0f, -0.2f));
 		entityFactory.createRoom();
 
-		Entity airplane = entityFactory.createToy("airplane", vect3.set(0.5f, 0f, -6.4f));
-		Entity alien = entityFactory.createToy("alien", vect3.set(8.5f, 0f, -9.4f));
-		Entity workbench = entityFactory.createToy("workbench", vect3.set(18.5f, 0f, -5.4f));
+		Entity airplane = entityFactory.createToy("airplane", vect3.set(0.5f, 0f, -6.4f), true);
+		Entity alien = entityFactory.createToy("alien", vect3.set(8.5f, 0f, -9.4f), true);
+		Entity workbench = entityFactory.createToy("workbench", vect3.set(18.5f, 0f, -5.4f), false);
 
 		// TODO create furniture, obstacles, etc.
 

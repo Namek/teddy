@@ -99,12 +99,15 @@ public class EntityFactory extends BaseSystem {
 		setupDecal(teddyEdit, animStandingFrames[0]);
 	}
 
-	public Entity createToy(String name, Vector3 position) {
+	public Entity createToy(String name, Vector3 position, boolean isCarryable) {
 		TextureRegion texture = toysAtlas.findRegion(name);
 		EntityEdit edit = world.createEntity().edit();
 		edit.create(Transform.class).xyz(position);
 		edit.create(Collider.class).groups(CollisionGroups.TOYS);
-		edit.create(Carryable.class);
+
+		if (isCarryable) {
+			edit.create(Carryable.class);
+		}
 
 		setupDecal(edit, texture);
 

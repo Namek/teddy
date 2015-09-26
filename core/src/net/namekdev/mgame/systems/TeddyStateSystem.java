@@ -10,8 +10,11 @@ import net.namekdev.mgame.enums.MConstants;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
+import com.artemis.Entity;
+import com.artemis.EntitySubscription.SubscriptionListener;
 import com.artemis.EntitySystem;
 import com.artemis.annotations.Wire;
+import com.artemis.utils.IntBag;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 
@@ -27,20 +30,22 @@ public class TeddyStateSystem extends EntitySystem {
 
 	static final float floorHeight = 0f;
 
+	public int teddyEntityId;
+	public Teddy state;
+
 
 	public TeddyStateSystem() {
 		super(Aspect.all(Teddy.class));
 	}
 
 	@Override
-	protected void initialize() {
-
+	protected void inserted(int entityId) {
+		teddyEntityId = entityId;
+		state = tm.get(entityId);
 	}
 
 	@Override
 	protected void processSystem() {
-		int teddyEntityId = subscription.getEntities().get(0);
-		Teddy state = tm.get(teddyEntityId);
 		AnimationComponent anim = am.get(teddyEntityId);
 		Transform transform = mTransform.get(teddyEntityId);
 		Velocity velocity = mVelocity.get(teddyEntityId);

@@ -3,7 +3,6 @@ package net.namekdev.mgame.systems;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.annotations.Wire;
-import com.badlogic.gdx.math.Vector3;
 
 import net.namekdev.mgame.components.Carryable;
 import net.namekdev.mgame.components.base.Attached;
@@ -17,6 +16,8 @@ public class CollisionSystem extends CollisionDetectionSystem {
 	ComponentMapper<Attached> mAttached;
 	ComponentMapper<Carryable> mCarryable;
 	ComponentMapper<Dimensions> mDimensions;
+
+	TeddyStateSystem teddySystem;
 
 
 	@Override
@@ -35,12 +36,19 @@ public class CollisionSystem extends CollisionDetectionSystem {
 	private CollisionEnterListener toyCollisionListener = new CollisionEnterListener() {
 		@Override
 		public void onCollisionEnter(int toyId, int otherEntityId) {
+			if (teddySystem.state.carriedEntityId >= 1) {
+				return;
+			}
+
 			Entity toy = world.getEntity(toyId);
 			Dimensions dims = mDimensions.get(otherEntityId);
+
 			Attached toyAttach = toy.edit().create(Attached.class);
 			toyAttach.entity = world.getEntity(otherEntityId);
 			toyAttach.offset.x = dims.getWidth();
 			toyAttach.offset.y = dims.getHeight()/2;
+
+			teddySystem.state.carriedEntityId = otherEntityId;
 		}
 	};
 
