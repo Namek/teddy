@@ -100,12 +100,34 @@ public class PositionSystem extends EntityProcessingSystem {
 		// Calculate additional velocity for external forces
 		if (force != null) {
 			accelDelta.set(extAcceleration).scl(deltaTime);
+
+			// apply impulse
+			extVelocity.add(force.impulseForce);
+			force.impulseForce.set(0, 0, 0);
+
 			posDelta.set(accelDelta).scl(0.5f).add(extVelocity).scl(deltaTime);
 			extVelocity.add(accelDelta);
 			transform.desiredPos.add(posDelta);
 
+
 			if (velocityComponent.maxExtSpeed >= 0) {
 				extVelocity.limit(velocityComponent.maxExtSpeed);
+			}
+
+			if (velocityComponent.extFrictionOn) {
+				float friction = velocityComponent.extFriction * deltaTime;
+				float speed = velocity.len();
+
+				if (friction < speed) {
+					float coeff = friction / speed;
+					if (coeff < 0.0001f) {
+						coeff = 0;
+					}
+					extVelocity.scl(coeff);
+				}
+				else {
+					extVelocity.set(0, 0, 0);
+				}
 			}
 		}
 

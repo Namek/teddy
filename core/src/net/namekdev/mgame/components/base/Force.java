@@ -21,10 +21,24 @@ public class Force extends PooledComponent {
 	 */
 	public final Vector3 extForce = new Vector3();
 
+	public final Vector3 impulseForce = new Vector3();
+	public float impulseTime = 0;
+
+	public void impulse(Vector3 force, float time) {
+		impulseForce.set(force);
+		impulseTime = time;
+	}
+
+	public void applyImpulse(float x, float y, float z, float time) {
+		impulseForce.set(x, y, z);
+		impulseTime = time;
+	}
 
 	@Override
 	protected void reset() {
 		accelForce.set(0, 0, 0);
 		extForce.set(0, 0, 0);
+		impulseForce.set(0, 0, 0);
+		impulseTime = 0;
 	}
 }

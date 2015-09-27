@@ -1,5 +1,6 @@
 package net.namekdev.mgame.systems;
 
+import net.namekdev.mgame.components.Carryable;
 import net.namekdev.mgame.components.base.Transform;
 import net.namekdev.mgame.components.base.Velocity;
 
@@ -33,6 +34,13 @@ public class MovementSystem extends EntityProcessingSystem {
 		if (transform.desiredPos.z >= 0f) {
 			transform.desiredPos.z = 0f;
 			velocity.velocity.z = 0;
+		}
+
+		if (entity.getComponent(Carryable.class) != null) {
+			// stupid hack to stop toys when dropped down, simulating friction
+			if (transform.desiredPos.y == 0f) {
+				velocity.extVelocity.x = 0;
+			}
 		}
 	}
 

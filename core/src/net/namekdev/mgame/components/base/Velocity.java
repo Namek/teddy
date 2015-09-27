@@ -51,6 +51,10 @@ public class Velocity extends PooledComponent {
 	public boolean frictionOn;
 
 
+	public float extFriction;
+	public boolean extFrictionOn;
+
+
 	public Velocity setup(float maxSpeed) {
 		this.maxSpeed = maxSpeed;
 		this.friction = 0;
@@ -62,6 +66,18 @@ public class Velocity extends PooledComponent {
 		this.maxSpeed = maxSpeed;
 		this.friction = friction;
 		this.frictionOn = true;
+		return this;
+	}
+
+	public Velocity friction(float friction) {
+		this.frictionOn = true;
+		this.friction = friction;
+		return this;
+	}
+
+	public Velocity extFriction(float friction) {
+		this.extFrictionOn = true;
+		this.extFriction = friction;
 		return this;
 	}
 
@@ -79,5 +95,7 @@ public class Velocity extends PooledComponent {
 		maxExtSpeed = -1;
 		friction = 0;
 		frictionOn = false;
+		extFriction = 0;
+		extFrictionOn = false;
 	}
 }

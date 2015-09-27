@@ -105,7 +105,7 @@ public class EntityFactory extends BaseSystem {
 		EntityEdit edit = world.createEntity().edit();
 		edit.create(Transform.class).xyz(position);
 		edit.create(Collider.class).groups(CollisionGroups.TOYS);
-		edit.create(Velocity.class);
+		edit.create(Velocity.class).friction(10).extFriction(10);
 		edit.create(Gravity.class).maxSpeed = 7;
 
 		if (isCarryable) {
