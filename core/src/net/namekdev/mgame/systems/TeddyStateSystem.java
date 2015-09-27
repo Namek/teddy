@@ -175,7 +175,7 @@ public class TeddyStateSystem extends EntitySystem {
 			attachmentSystem.deattach(toyId);
 			state.carriedEntityId = -1;
 
-			mForce.create(toyId).applyImpulse(2, 460, 0, 0.001f);
+			mForce.create(toyId).applyImpulse(40, 40, 0, 0.2f);
 //			mVelocity.get(toyId).extFrictionOn = false;
 		}
 	}

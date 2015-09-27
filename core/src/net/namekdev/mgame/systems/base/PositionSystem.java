@@ -1,5 +1,6 @@
 package net.namekdev.mgame.systems.base;
 
+import net.mostlyoriginal.api.plugin.extendedcomponentmapper.M;
 import net.namekdev.mgame.components.base.Force;
 import net.namekdev.mgame.components.base.Gravity;
 import net.namekdev.mgame.components.base.PreviousPosition;
@@ -27,7 +28,7 @@ import com.badlogic.gdx.math.Vector3;
 @Wire
 public class PositionSystem extends EntityProcessingSystem {
 	ComponentMapper<Transform> mTransform;
-	ComponentMapper<PreviousPosition> mPreviousPos;
+	M<PreviousPosition> mPreviousPos;
 	ComponentMapper<Velocity> mVelocity;
 	ComponentMapper<Force> mForce;
 	ComponentMapper<Gravity> mGravity;
@@ -44,19 +45,15 @@ public class PositionSystem extends EntityProcessingSystem {
 	}
 
 	/**
-	 * Velocity Verlet, maxSpeed, friction, gravity
+	 * Velocity maxSpeed, friction, gravity
 	 */
 	@Override
 	protected void process(Entity e) {
 		Transform transform = mTransform.get(e);
-		PreviousPosition previousPosition = mPreviousPos.get(e);
+		PreviousPosition previousPosition = mPreviousPos.create(e);
 		Velocity velocityComponent = mVelocity.get(e);
 		Force force = mForce.get(e);
 		Gravity gravity = mGravity.get(e);
-
-		if (previousPosition != null) {
-			previousPosition.position.set(transform.currentPos);
-		}
 
 		float deltaTime = timeSystem.getDeltaTime(e);
 
@@ -73,8 +70,8 @@ public class PositionSystem extends EntityProcessingSystem {
 
 		// Calculate entity's own velocity
 		accelDelta.set(acceleration).scl(deltaTime);
-		posDelta.set(accelDelta).scl(0.5f).add(velocity).scl(deltaTime);
 		velocity.add(accelDelta);
+		posDelta.set(velocity).scl(deltaTime);
 		transform.desiredPos.add(posDelta);
 
 		if (velocityComponent.maxSpeed >= 0) {
@@ -101,14 +98,10 @@ public class PositionSystem extends EntityProcessingSystem {
 		if (force != null) {
 			accelDelta.set(extAcceleration).scl(deltaTime);
 
-			// apply impulse
-			extVelocity.add(force.impulseForce);
+			extVelocity.add(accelDelta).add(force.impulseForce);
 			force.impulseForce.set(0, 0, 0);
-
-			posDelta.set(accelDelta).scl(0.5f).add(extVelocity).scl(deltaTime);
-			extVelocity.add(accelDelta);
+			posDelta.set(extVelocity).scl(deltaTime);
 			transform.desiredPos.add(posDelta);
-
 
 			if (velocityComponent.maxExtSpeed >= 0) {
 				extVelocity.limit(velocityComponent.maxExtSpeed);
@@ -134,8 +127,8 @@ public class PositionSystem extends EntityProcessingSystem {
 		// Calculate gravity
 		if (gravity != null) {
 			accelDelta.set(gravity.force).scl(deltaTime);
-			posDelta.set(accelDelta).scl(0.5f).add(gravity.velocity).scl(deltaTime);
 			gravity.velocity.add(accelDelta);
+			posDelta.set(gravity.velocity).scl(deltaTime);
 
 			if (gravity.maxSpeed >= 0) {
 				gravity.velocity.limit(gravity.maxSpeed);
@@ -143,5 +136,7 @@ public class PositionSystem extends EntityProcessingSystem {
 
 			transform.desiredPos.add(posDelta);
 		}
+
+		previousPosition.position.set(transform.currentPos);
 	}
 }
