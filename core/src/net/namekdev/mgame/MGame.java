@@ -1,5 +1,7 @@
 package net.namekdev.mgame;
 
+import net.mostlyoriginal.api.plugin.extendedcomponentmapper.ExtendedComponentMapperPlugin;
+import net.mostlyoriginal.api.utils.builder.WorldConfigurationBuilder;
 import net.namekdev.mgame.builders.EntityFactory;
 import net.namekdev.mgame.builders.WorldInitSystem;
 import net.namekdev.mgame.systems.CameraSystem;
@@ -24,20 +26,23 @@ public class MGame extends ApplicationAdapter {
 
 	@Override
 	public void create () {
-		WorldConfiguration cfg = new WorldConfiguration();
-		cfg.setSystem(new EntityFactory());
-		cfg.setSystem(new EventSystem());
-		cfg.setSystem(new WorldInitSystem());
-		cfg.setSystem(new TimeSystem());
-		cfg.setSystem(new TeddyStateSystem());
-		cfg.setSystem(new PositionSystem());
-		cfg.setSystem(new AttachmentSystem());
-		cfg.setSystem(new CollisionSystem());
-		cfg.setSystem(new MovementSystem());
-		cfg.setSystem(new CameraSystem());
-		cfg.setSystem(new KeyframedDecalUpdateSystem());
-		cfg.setSystem(new RenderSystem());
-		cfg.setSystem(new TestSystem());
+		WorldConfiguration cfg = new WorldConfigurationBuilder()
+			.with(new ExtendedComponentMapperPlugin())
+			.with(new EntityFactory())
+			.with(new EventSystem())
+			.with(new WorldInitSystem())
+			.with(new TimeSystem())
+			.with(new TeddyStateSystem())
+			.with(new PositionSystem())
+			.with(new AttachmentSystem())
+			.with(new CollisionSystem())
+			.with(new MovementSystem())
+			.with(new CameraSystem())
+			.with(new KeyframedDecalUpdateSystem())
+			.with(new RenderSystem())
+			.with(new TestSystem())
+			.build();
+
 		world = new World(cfg);
 	}
 
