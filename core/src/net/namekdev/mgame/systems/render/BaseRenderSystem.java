@@ -32,16 +32,16 @@ public class BaseRenderSystem extends RenderBatchingSystem {
 	ComponentMapper<Renderable> mRenderable;
 	ComponentMapper<Shaders> mShaders;
 
-	DecalBatch decalBatch;
-	SpriteBatch spriteBatch;
-	ModelBatch modelBatch;
+	public DecalBatch decalBatch;
+	public SpriteBatch spriteBatch;
+	public ModelBatch modelBatch;
 	public PerspectiveCamera camera = new PerspectiveCamera(80, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 	DecalRenderer decalRenderer;
 	SpriteRenderer spriteRenderer;
 	ModelRenderer modelRenderer;
 
-	Environment environment;
+	public Environment environment;
 	DirectionalLight directionalLight;
 
 	@Override
@@ -102,7 +102,7 @@ public class BaseRenderSystem extends RenderBatchingSystem {
 	}
 
 
-	private class ModelRenderer implements EntityProcessAgent {
+	class ModelRenderer implements EntityProcessAgent {
 		@Override
 		public void begin() {
 			modelBatch.begin(camera);
@@ -111,6 +111,7 @@ public class BaseRenderSystem extends RenderBatchingSystem {
 		@Override
 		public void process(Entity e) {
 			ModelSetComponent models = mModelSet.get(e);
+//			Transform transform = mTransform.get(e);
 
 			if (models != null) {
 				Shaders shaders = mShaders.get(e);

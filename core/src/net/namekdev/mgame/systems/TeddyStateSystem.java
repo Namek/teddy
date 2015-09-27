@@ -4,6 +4,7 @@ import static net.namekdev.mgame.components.Teddy.*;
 import net.mostlyoriginal.api.event.common.Subscribe;
 import net.namekdev.mgame.ToyCollisionEvent;
 import net.namekdev.mgame.components.AnimationComponent;
+import net.namekdev.mgame.components.Physical;
 import net.namekdev.mgame.components.Teddy;
 import net.namekdev.mgame.components.base.Dimensions;
 import net.namekdev.mgame.components.base.Force;
@@ -28,8 +29,10 @@ public class TeddyStateSystem extends EntityProcessingSystem {
 	ComponentMapper<Force> mForce;
 	ComponentMapper<Teddy> tm;
 	ComponentMapper<Dimensions> mDimensions;
+	ComponentMapper<Physical> mPhysical;
 
 	AttachmentSystem attachmentSystem;
+	PhysicsSystem physicsSystem;
 	RenderSystem renderSystem;
 
 	static final float floorHeight = 0f;
@@ -121,11 +124,11 @@ public class TeddyStateSystem extends EntityProcessingSystem {
 		}
 
 		if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
-			force.extForce.y = transform.currentPos.y > floorHeight ? 2000 : 1000;
+//			force.extForce.y = transform.currentPos.y > floorHeight ? 20 : 10;
 			dropToy();
 		}
 		else {
-			force.extForce.y = transform.currentPos.y > floorHeight + 1.4f ? -60 : -1;
+//			force.extForce.y = transform.currentPos.y > floorHeight + 1.4f ? -60 : -1;
 		}
 
 		if (Gdx.input.isKeyJustPressed(Keys.E)) {
@@ -141,6 +144,18 @@ public class TeddyStateSystem extends EntityProcessingSystem {
 		}
 		else {
 			anim.stateTime += world.delta*0.4f;
+		}
+
+
+		// ------ new physics system -------
+
+		Physical physical = mPhysical.get(teddyEntityId);
+//		physical.body.addForce(force.accelForce.x, force.accelForce.y, force.accelForce.z);
+//		physical.body.addForce(force.extForce.x, force.extForce.y, force.extForce.z);
+
+
+		if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
+			physical.body.setForce(0, 650, 0);
 		}
 	}
 

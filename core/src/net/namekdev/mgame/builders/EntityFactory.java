@@ -1,8 +1,14 @@
 package net.namekdev.mgame.builders;
 
+import org.ode4j.ode.DBody;
+import org.ode4j.ode.DPlane;
+import org.ode4j.ode.OdeHelper;
+
+import net.mostlyoriginal.api.plugin.extendedcomponentmapper.M;
 import net.namekdev.mgame.components.AnimationComponent;
 import net.namekdev.mgame.components.CameraPOI;
 import net.namekdev.mgame.components.Carryable;
+import net.namekdev.mgame.components.Physical;
 import net.namekdev.mgame.components.Renderable;
 import net.namekdev.mgame.components.Teddy;
 import net.namekdev.mgame.components.base.Dimensions;
@@ -16,6 +22,7 @@ import net.namekdev.mgame.enums.Assets;
 import net.namekdev.mgame.enums.CollisionGroups;
 import net.namekdev.mgame.enums.MConstants;
 import net.namekdev.mgame.enums.RenderLayers;
+import net.namekdev.mgame.systems.PhysicsSystem;
 import net.namekdev.mgame.systems.RenderSystem;
 import net.namekdev.mgame.systems.base.collision.Collider;
 
@@ -50,7 +57,10 @@ import com.badlogic.gdx.math.Vector3;
 @Wire
 public class EntityFactory extends Manager {
 	RenderSystem renderSystem;
+	PhysicsSystem physicsSystem;
 	AssetManager assetManager;
+
+	M<Dimensions> mDimensions;
 
 	TextureAtlas toysAtlas;
 
@@ -96,6 +106,9 @@ public class EntityFactory extends Manager {
 		teddyEdit.create(Collider.class).groups(CollisionGroups.TEDDY);
 
 		setupDecal(teddyEdit, animStandingFrames[0]);
+
+		physicsSystem.initEntity(teddyEdit, mDimensions.get(teddyEdit.getEntity()))
+			.position(position);
 	}
 
 	public Entity createToy(String name, Vector3 position, boolean isCarryable) {
@@ -112,11 +125,31 @@ public class EntityFactory extends Manager {
 
 		setupDecal(edit, texture);
 
+		Dimensions dims = edit.getEntity().getComponent(Dimensions.class);
+		Physical physical = physicsSystem.initEntity(edit, dims);
+		physical.body.setPosition(position.x, position.y, position.z);
+		if (!isCarryable) {
+			physical.body.setGravityMode(false);
+		}
+
 		return edit.getEntity();
 	}
 
 	public void createRoom() {
-		Model floorModel, wallModel, tableModel;
+		EntityEdit roomEdit = world.createEntity().edit();
+
+		Dimensions dims = new Dimensions().set(110, 30, 20);
+		float startX = -10, startZ = -20;
+
+        Physical physical = physicsSystem.initEntity(roomEdit);
+        DPlane floorPlane = OdeHelper.createPlane(physicsSystem.space, 0, 1, 0, 0);
+        floorPlane.setBody(physical.body);
+        physical.body.setGravityMode(false);
+        physical.body.setPosition(startX, 0, startZ);
+        roomEdit.create(Transform.class).xyz(startX, 0, startZ);
+
+
+        Model floorModel, wallModel, tableModel;
 
 		// create floor
         Texture floorTexture = new Texture("enviro/floor2.png");
@@ -134,17 +167,17 @@ public class EntityFactory extends Manager {
         );
 
 		floorModel = mb.createRect(
-			-10, 0, 0,
-			-10, 0, 20,
-			100, 0, 20,
-			100, 0, 0,
+			0, 0, 0,
+			0, 0, 20,
+			110, 0, 20,
+			110, 0, 0,
 			0, 1, 0,
 			floorMat, Usage.Position | Usage.Normal | Usage.TextureCoordinates
 		);
 		floorModel.manageDisposable(floorTexture);
 
 		ModelInstance floor = new ModelInstance(floorModel);
-		floor.transform.translate(0, 0, -20);
+		floor.transform.translate(startX, 0, startZ);
 
 
         // background wall
@@ -175,7 +208,7 @@ public class EntityFactory extends Manager {
 	    	);
 			mb.manage(wallTexturesAttrs[i].textureDescription.texture);
 		}
-		float x = -10, h = 30, w = 10, disp = 0f;
+		float x = startX, h = 30, w = 10, disp = 0f;
 		for (int i = 0; i < 11; ++i) {
 			MeshPartBuilder mpb = mb.part(
 				"wall" + i, GL20.GL_TRIANGLES, Usage.Position | Usage.Normal | Usage.TextureCoordinates, wallTextureMats[i%2]
@@ -193,7 +226,15 @@ public class EntityFactory extends Manager {
 		}
 		wallModel = mb.end();
 		ModelInstance wall = new ModelInstance(wallModel);
-		wall.transform.translate(0, 0, -10);
+//		wall.transform.translate(0, 0, -10);
+
+
+		// finish setup of room entity
+		roomEdit.create(Renderable.class).type = Renderable.MODEL;
+		roomEdit.create(ModelSetComponent.class).instances = new ModelInstance[] {
+			floor, wall
+		};
+		renderSystem.registerToModelRenderer(roomEdit.getEntity());
 
 
 		// table
@@ -202,21 +243,12 @@ public class EntityFactory extends Manager {
 		ModelInstance table = new ModelInstance(tableModel);
 		table.transform.translate(10, 0, -4);
 
-
-		// now create entities
-		EntityEdit edit = world.createEntity().edit();
-		edit.create(Renderable.class).type = Renderable.MODEL;
-		edit.create(ModelSetComponent.class).instances = new ModelInstance[] {
-			floor, wall
-		};
-		renderSystem.registerToModelRenderer(edit.getEntity());
-
-		edit = world.createEntity().edit();
-		edit.create(Renderable.class).type = Renderable.MODEL;
-		edit.create(ModelSetComponent.class).instances = new ModelInstance[] {
+//		edit = world.createEntity().edit();
+//		edit.create(Renderable.class).type = Renderable.MODEL;
+//		edit.create(ModelSetComponent.class).instances = new ModelInstance[] {
 //			table //TODO correct table model file by removing wall
-		};
-		renderSystem.registerToModelRenderer(edit.getEntity());
+//		};
+//		renderSystem.registerToModelRenderer(edit.getEntity());
 	}
 
 	public void setupDecal(EntityEdit edit, TextureRegion texture) {
