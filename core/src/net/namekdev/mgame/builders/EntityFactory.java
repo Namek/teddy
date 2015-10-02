@@ -1,9 +1,5 @@
 package net.namekdev.mgame.builders;
 
-import org.ode4j.ode.DBody;
-import org.ode4j.ode.DPlane;
-import org.ode4j.ode.OdeHelper;
-
 import net.mostlyoriginal.api.plugin.extendedcomponentmapper.M;
 import net.namekdev.mgame.components.AnimationComponent;
 import net.namekdev.mgame.components.CameraPOI;
@@ -24,15 +20,15 @@ import net.namekdev.mgame.enums.MConstants;
 import net.namekdev.mgame.enums.RenderLayers;
 import net.namekdev.mgame.systems.PhysicsSystem;
 import net.namekdev.mgame.systems.RenderSystem;
-import net.namekdev.mgame.systems.base.collision.Collider;
+
+import org.ode4j.ode.DBox;
+import org.ode4j.ode.OdeHelper;
 
 import com.artemis.Entity;
 import com.artemis.EntityEdit;
 import com.artemis.Manager;
 import com.artemis.annotations.Wire;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.ModelLoader;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
@@ -48,7 +44,6 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.FloatAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
-import com.badlogic.gdx.graphics.g3d.loader.ObjLoader;
 import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.TextureDescriptor;
@@ -103,19 +98,19 @@ public class EntityFactory extends Manager {
 			.maxExtSpeed = MConstants.Teddy.MaxJumpSpeed;
 		teddyEdit.create(Force.class);
 		teddyEdit.create(CameraPOI.class);
-		teddyEdit.create(Collider.class).groups(CollisionGroups.TEDDY);
+//		teddyEdit.create(Collider.class).groups(CollisionGroups.TEDDY);
 
 		setupDecal(teddyEdit, animStandingFrames[0]);
 
 		physicsSystem.initEntity(teddyEdit, mDimensions.get(teddyEdit.getEntity()))
-			.position(position);
+			.position(position).groups(CollisionGroups.TEDDY);
 	}
 
 	public Entity createToy(String name, Vector3 position, boolean isCarryable) {
 		TextureRegion texture = toysAtlas.findRegion(name);
 		EntityEdit edit = world.createEntity().edit();
 		edit.create(Transform.class).xyz(position);
-		edit.create(Collider.class).groups(CollisionGroups.TOYS);
+//		edit.create(Collider.class).groups(CollisionGroups.TOYS);
 		edit.create(Velocity.class);
 		edit.create(Gravity.class).maxSpeed = 7;
 
@@ -126,11 +121,8 @@ public class EntityFactory extends Manager {
 		setupDecal(edit, texture);
 
 		Dimensions dims = edit.getEntity().getComponent(Dimensions.class);
-		Physical physical = physicsSystem.initEntity(edit, dims);
+		Physical physical = physicsSystem.initEntity(edit, dims).groups(CollisionGroups.TOYS);
 		physical.body.setPosition(position.x, position.y, position.z);
-		if (!isCarryable) {
-			physical.body.setGravityMode(false);
-		}
 
 		return edit.getEntity();
 	}
@@ -138,15 +130,18 @@ public class EntityFactory extends Manager {
 	public void createRoom() {
 		EntityEdit roomEdit = world.createEntity().edit();
 
-		Dimensions dims = new Dimensions().set(110, 30, 20);
+		Dimensions dims = new Dimensions().set(110, 0.1f, 20);
 		float startX = -10, startZ = -20;
 
-        Physical physical = physicsSystem.initEntity(roomEdit);
-        DPlane floorPlane = OdeHelper.createPlane(physicsSystem.space, 0, 1, 0, 0);
+		Physical physical = physicsSystem.initEntity(roomEdit).groups(CollisionGroups.ROOM);
+		physical.body.setKinematic();
+		physical.body.setGravityMode(false);
+        DBox floorPlane = OdeHelper.createBox(dims.getWidth(), 0.1f, dims.getDepth());
         floorPlane.setBody(physical.body);
-        physical.body.setGravityMode(false);
-        physical.body.setPosition(startX, 0, startZ);
-        roomEdit.create(Transform.class).xyz(startX, 0, startZ);
+        physical.body.setPosition(startX+dims.getWidth()/2, 0.01f+dims.getHeight()/2, startZ+dims.getDepth()/2);
+        physicsSystem.addToSpace(floorPlane);
+
+        roomEdit.create(Transform.class);//.xyz(startX, 0, startZ);
 
 
         Model floorModel, wallModel, tableModel;
@@ -238,10 +233,10 @@ public class EntityFactory extends Manager {
 
 
 		// table
-		ModelLoader loader = new ObjLoader();
-		tableModel = loader.loadModel(Gdx.files.internal("furniture/table.obj"));
-		ModelInstance table = new ModelInstance(tableModel);
-		table.transform.translate(10, 0, -4);
+//		ModelLoader loader = new ObjLoader();
+//		tableModel = loader.loadModel(Gdx.files.internal("furniture/table.obj"));
+//		ModelInstance table = new ModelInstance(tableModel);
+//		table.transform.translate(10, 0, -4);
 
 //		edit = world.createEntity().edit();
 //		edit.create(Renderable.class).type = Renderable.MODEL;

@@ -13,13 +13,13 @@ public class DecalComponent extends PooledComponent {
 	public boolean lookAtCamera = true;
 
 	/** Displace rendering position by multiplying the factor with decal width and height. */
-	public Vector2 posDisplacementFactor = new Vector2(0, 0.5f);
+	public Vector2 posDisplacementFactor = new Vector2(0, 0);
 
 
 	@Override
 	protected void reset() {
 		decal = null;
 		lookAtCamera = true;
-		posDisplacementFactor.set(0, 0.5f);
+		posDisplacementFactor.set(0, 0);
 	}
 }

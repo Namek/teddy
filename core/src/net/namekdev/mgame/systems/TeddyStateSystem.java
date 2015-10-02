@@ -53,6 +53,7 @@ public class TeddyStateSystem extends EntityProcessingSystem {
 		state = tm.get(entity);
 	}
 
+
 	@Override
 	protected void process(Entity e) {
 		AnimationComponent anim = am.get(teddyEntityId);
