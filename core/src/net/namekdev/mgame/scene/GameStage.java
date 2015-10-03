@@ -25,7 +25,6 @@ import com.badlogic.gdx.graphics.g3d.utils.TextureDescriptor;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.uwsoft.editor.renderer.Overlap2DStage;
 
 public class GameStage  {
 	Camera camera3d;

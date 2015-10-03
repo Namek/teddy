@@ -12,6 +12,7 @@ import net.namekdev.mgame.systems.base.events.EventSystem;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
+import com.artemis.Entity;
 import com.artemis.EntitySystem;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.IntBag;
@@ -156,8 +157,8 @@ public class CollisionDetectionSystem extends EntitySystem {
 	}
 
 	@Override
-	protected void removed(int entityId) {
-		phases.clear(entityId);
+	public void removed(Entity entity) {
+		phases.clear(entity.getId());
 	}
 
 	public void onCollisionEnter(int entity1Id, Collider collider1, int entity2Id, Collider collider2) {

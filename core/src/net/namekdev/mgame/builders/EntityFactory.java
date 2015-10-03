@@ -19,9 +19,9 @@ import net.namekdev.mgame.enums.RenderLayers;
 import net.namekdev.mgame.systems.RenderSystem;
 import net.namekdev.mgame.systems.base.collision.Collider;
 
-import com.artemis.BaseSystem;
 import com.artemis.Entity;
 import com.artemis.EntityEdit;
+import com.artemis.Manager;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -48,7 +48,7 @@ import com.badlogic.gdx.graphics.g3d.utils.TextureDescriptor;
 import com.badlogic.gdx.math.Vector3;
 
 @Wire
-public class EntityFactory extends BaseSystem {
+public class EntityFactory extends Manager {
 	RenderSystem renderSystem;
 	AssetManager assetManager;
 
@@ -56,11 +56,9 @@ public class EntityFactory extends BaseSystem {
 
 
 	@Override
-	protected void processSystem() {
+	protected void initialize() {
 		assetManager = new AssetManager();
 		toysAtlas = loadAsset(Assets.Textures.Toys, TextureAtlas.class);
-
-		setPassive(true);
 	}
 
 	<T> T loadAsset(String filename, Class<T> type) {

@@ -3,19 +3,19 @@ package net.namekdev.mgame.builders;
 import net.namekdev.mgame.enums.CollisionGroups;
 import net.namekdev.mgame.systems.base.collision.CollisionDetectionSystem;
 
-import com.artemis.BaseSystem;
 import com.artemis.Entity;
+import com.artemis.Manager;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.math.Vector3;
 
 @Wire
-public class WorldInitSystem extends BaseSystem {
+public class WorldInitSystem extends Manager {
 	EntityFactory entityFactory;
 	CollisionDetectionSystem collisionSystem;
 
 
 	@Override
-	protected void processSystem() {
+	protected void initialize() {
 		Vector3 vect3 = new Vector3();
 
 		collisionSystem.relations.connectGroups(CollisionGroups.TEDDY, CollisionGroups.TOYS);
@@ -28,7 +28,5 @@ public class WorldInitSystem extends BaseSystem {
 		Entity workbench = entityFactory.createToy("workbench", vect3.set(18.5f, 0f, -5.4f), false);
 
 		// TODO create furniture, obstacles, etc.
-
-		setPassive(true);
 	}
 }

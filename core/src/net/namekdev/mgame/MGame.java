@@ -1,7 +1,9 @@
 package net.namekdev.mgame;
 
 import net.mostlyoriginal.api.plugin.extendedcomponentmapper.ExtendedComponentMapperPlugin;
-import net.mostlyoriginal.api.utils.builder.WorldConfigurationBuilder;
+
+import com.artemis.WorldConfigurationBuilder;
+
 import net.namekdev.mgame.builders.EntityFactory;
 import net.namekdev.mgame.builders.WorldInitSystem;
 import net.namekdev.mgame.systems.CameraSystem;
@@ -28,9 +30,7 @@ public class MGame extends ApplicationAdapter {
 	public void create () {
 		WorldConfiguration cfg = new WorldConfigurationBuilder()
 			.with(new ExtendedComponentMapperPlugin())
-			.with(new EntityFactory())
 			.with(new EventSystem())
-			.with(new WorldInitSystem())
 			.with(new TimeSystem())
 			.with(new TeddyStateSystem())
 			.with(new PositionSystem())
@@ -41,6 +41,8 @@ public class MGame extends ApplicationAdapter {
 			.with(new KeyframedDecalUpdateSystem())
 			.with(new RenderSystem())
 			.with(new TestSystem())
+			.with(new EntityFactory())
+			.with(new WorldInitSystem())
 			.build();
 
 		world = new World(cfg);
