@@ -18,8 +18,8 @@ import net.namekdev.mgame.enums.Assets;
 import net.namekdev.mgame.enums.CollisionGroups;
 import net.namekdev.mgame.enums.MConstants;
 import net.namekdev.mgame.enums.RenderLayers;
-import net.namekdev.mgame.systems.PhysicsSystem;
 import net.namekdev.mgame.systems.RenderSystem;
+import net.namekdev.mgame.systems.base.physics.PhysicsSystem;
 
 import org.ode4j.ode.DBox;
 import org.ode4j.ode.OdeHelper;

@@ -1,7 +1,8 @@
-package net.namekdev.mgame.systems;
+package net.namekdev.mgame.systems.base.physics;
 
 import net.mostlyoriginal.api.plugin.extendedcomponentmapper.M;
 import net.namekdev.mgame.components.Physical;
+import net.namekdev.mgame.systems.RenderSystem;
 
 import org.ode4j.math.DVector3C;
 import org.ode4j.ode.DAABBC;

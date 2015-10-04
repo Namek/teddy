@@ -80,6 +80,7 @@ project(":core") {
         compile "net.mostlyoriginal.artemis-odb:contrib-core:1.1.0"
         compile "net.mostlyoriginal.artemis-odb:contrib-eventbus:1.1.0"
         compile "org.ode4j:core:0.3.0"
+        compile "net.namekdev.entity_tracker:artemis-entity-tracker:0.2.0"
     }
 }
 

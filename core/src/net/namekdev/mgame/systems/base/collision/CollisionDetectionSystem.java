@@ -21,7 +21,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
 /**
- * Collision detector working on top of groups and group relations.
+ * Collision detector working on top of groups and group groups.
  *
  * @todo optimize system to be processed in configurable intervals
  * @todo optimize by caching entities belongingness to groups, see {@link #processEntities(IntBag)} comment.
@@ -74,8 +74,8 @@ public class CollisionDetectionSystem extends EntitySystem {
 	/**
 	 * <b>TODO</b>: optimize by caching entities belongingness to groups.
 	 *	 Now all entities are checked against themselves needlessly,
-	 *	 e.g. thanks to groups relations Bullets will never collide with Bullets
-	 *	 so it doesn't make much performance sense to check those relations between those entities.
+	 *	 e.g. thanks to groups groups Bullets will never collide with Bullets
+	 *	 so it doesn't make much performance sense to check those groups between those entities.
 	 */
 	protected void processEntities(IntBag entities) {
 		int[] ids = entities.getData();

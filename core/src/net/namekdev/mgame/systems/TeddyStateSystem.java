@@ -12,6 +12,7 @@ import net.namekdev.mgame.components.base.Transform;
 import net.namekdev.mgame.components.base.Velocity;
 import net.namekdev.mgame.enums.MConstants;
 import net.namekdev.mgame.systems.base.AttachmentSystem;
+import net.namekdev.mgame.systems.base.physics.PhysicsSystem;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;

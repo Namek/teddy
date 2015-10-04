@@ -12,7 +12,7 @@ import com.artemis.PooledComponent;
  * @see CollisionDetectionSystem
  */
 public class Collider extends PooledComponent {
-	/** Bitset of relations to which this entity belongs. */
+	/** Bitset of groups to which this entity belongs. */
 	public long groups;
 
 	/** For basic shape types supported by `CollisionDetectionSystem`, look into {@link ColliderType} */

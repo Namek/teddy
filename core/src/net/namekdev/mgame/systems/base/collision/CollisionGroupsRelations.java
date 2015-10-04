@@ -1,7 +1,7 @@
 package net.namekdev.mgame.systems.base.collision;
 
 /**
- * <p>Manages relations between all groups, supporting up to 63 groups.</p>
+ * <p>Manages groups between all groups, supporting up to 63 groups.</p>
  * <p>Relation is always two-sided (if group A is connected to group B, then B is connected to A).</p>
  *
  * @author Namek
@@ -13,7 +13,7 @@ public final class CollisionGroupsRelations {
 
 
 	/**
-	 * Makes relations between all groups for each of two different sets. Relation is two-sided.
+	 * Makes groups between all groups for each of two different sets. Relation is two-sided.
 	 */
 	public void connectGroups(long group, long groups) {
 		assert(group > 0);
@@ -69,7 +69,7 @@ public final class CollisionGroupsRelations {
 	}
 
 	/**
-	 * Resets all @{code group} relations by making only relations to given {@code groups}.
+	 * Resets all @{code group} groups by making only groups to given {@code groups}.
 	 */
 	public void setupGroup(long group, long groups) {
 		assert(group > 0);
@@ -102,7 +102,7 @@ public final class CollisionGroupsRelations {
 	}
 
 	/**
-	 * Clear all {@code groups} relations.
+	 * Clear all {@code groups} groups.
 	 * @param group
 	 */
 	public void clearGroupRelations(long group) {

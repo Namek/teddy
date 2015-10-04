@@ -4,14 +4,14 @@ import net.mostlyoriginal.api.plugin.extendedcomponentmapper.ExtendedComponentMa
 
 import com.artemis.WorldConfigurationBuilder;
 
+import net.namekdev.entity_tracker.EntityTracker;
+import net.namekdev.entity_tracker.network.EntityTrackerServer;
 import net.namekdev.mgame.builders.EntityFactory;
 import net.namekdev.mgame.builders.WorldInitSystem;
 import net.namekdev.mgame.components.Teddy;
 import net.namekdev.mgame.systems.CameraSystem;
 import net.namekdev.mgame.systems.CollisionSystem;
 import net.namekdev.mgame.systems.MovementSystem;
-import net.namekdev.mgame.systems.PhysicsDebugSystem;
-import net.namekdev.mgame.systems.PhysicsSystem;
 import net.namekdev.mgame.systems.RenderSystem;
 import net.namekdev.mgame.systems.TeddyStateSystem;
 import net.namekdev.mgame.systems.TestSystem;
@@ -19,6 +19,8 @@ import net.namekdev.mgame.systems.base.AttachmentSystem;
 import net.namekdev.mgame.systems.base.PositionSystem;
 import net.namekdev.mgame.systems.base.TimeSystem;
 import net.namekdev.mgame.systems.base.events.EventSystem;
+import net.namekdev.mgame.systems.base.physics.PhysicsDebugSystem;
+import net.namekdev.mgame.systems.base.physics.PhysicsSystem;
 import net.namekdev.mgame.systems.render.KeyframedDecalUpdateSystem;
 
 import com.artemis.Aspect;
@@ -35,7 +37,11 @@ public class MGame extends ApplicationAdapter {
 
 	@Override
 	public void create () {
+		EntityTrackerServer entityTrackerServer = new EntityTrackerServer();
+		entityTrackerServer.start();
+
 		WorldConfiguration cfg = new WorldConfigurationBuilder()
+			.with(new EntityTracker(entityTrackerServer))
 			.with(new ExtendedComponentMapperPlugin())
 			.with(new EventSystem())
 			.with(new TimeSystem())
