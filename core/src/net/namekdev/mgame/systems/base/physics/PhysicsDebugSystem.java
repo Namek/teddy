@@ -4,6 +4,7 @@ import net.mostlyoriginal.api.plugin.extendedcomponentmapper.M;
 import net.namekdev.mgame.components.Physical;
 import net.namekdev.mgame.systems.RenderSystem;
 
+import org.ode4j.math.DMatrix3C;
 import org.ode4j.math.DVector3C;
 import org.ode4j.ode.DAABBC;
 import org.ode4j.ode.DGeom;
@@ -54,15 +55,16 @@ public class PhysicsDebugSystem extends EntityProcessingSystem {
 		Physical physical = mPhysical.get(e);
 
 		DVector3C pos = physical.body.getPosition();
+		DMatrix3C rot = physical.body.getRotation();
 		DGeom geom = physical.body.getFirstGeom();
 
 		while (geom != null) {
-			renderGeom(pos, geom);
+			renderGeom(pos, rot, geom);
 			geom = physical.body.getNextGeom(geom);
 		}
 	}
 
-	private void renderGeom(DVector3C pos, DGeom geom) {
+	private void renderGeom(DVector3C pos, DMatrix3C rot, DGeom geom) {
 		DAABBC bbox = geom.getAABB();
 
 		Model model = mb.createBox(
@@ -77,6 +79,8 @@ public class PhysicsDebugSystem extends EntityProcessingSystem {
 			(float)pos.get1(),
 			(float)pos.get2()
 		);
+
+		// TODO use rotation
 
 		renderSystem.modelBatch.render(inst, renderSystem.environment);
 	}
