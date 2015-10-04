@@ -3,6 +3,7 @@ package net.namekdev.mgame.systems.base.physics;
 import org.ode4j.ode.DContact;
 import org.ode4j.ode.DContact.DSurfaceParameters;
 import org.ode4j.ode.DContactBuffer;
+import org.ode4j.ode.DContactGeom;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
@@ -52,7 +53,13 @@ class DContactBufferPool {
 			for (int i = 0, n = lastUsedContacts; i < n; ++i) {
 				final DContact c = buffer.get(i);
 				c.fdir1.setZero();
-				c.geom.g1 = c.geom.g2 = null;
+
+				DContactGeom g = c.geom;
+				g.g1 = g.g2 = null;
+				g.side1 = g.side2 = 0;
+				g.depth = 0;
+				g.normal.setZero();
+				g.pos.setZero();
 
 				final DSurfaceParameters p = c.surface;
 				p.mode = 0;

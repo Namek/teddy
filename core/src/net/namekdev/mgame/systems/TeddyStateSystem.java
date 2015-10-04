@@ -1,6 +1,8 @@
 package net.namekdev.mgame.systems;
 
 import static net.namekdev.mgame.components.Teddy.*;
+import static net.namekdev.mgame.utils.MathUtils.*;
+
 import net.mostlyoriginal.api.event.common.Subscribe;
 import net.namekdev.mgame.ToyCollisionEvent;
 import net.namekdev.mgame.components.AnimationComponent;
@@ -152,13 +154,15 @@ public class TeddyStateSystem extends EntityProcessingSystem {
 		// ------ new physics system -------
 
 		Physical physical = mPhysical.get(teddyEntityId);
-//		physical.body.addForce(force.accelForce.x, force.accelForce.y, force.accelForce.z);
-//		physical.body.addForce(force.extForce.x, force.extForce.y, force.extForce.z);
+		physical.body.addForce(force.accelForce.x, force.accelForce.y, force.accelForce.z);
+		physical.body.addForce(force.extForce.x, force.extForce.y, force.extForce.z);
 
 
 		if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
-			physical.body.setForce(0, 650, 0);
+			physical.body.setForce(0, 4650, 0);
 		}
+
+//		limit(physical.body.getLinearVel(), canRun ? MConstants.Teddy.MaxRunSpeed : MConstants.Teddy.MaxWalkSpeed);
 	}
 
 	@Subscribe

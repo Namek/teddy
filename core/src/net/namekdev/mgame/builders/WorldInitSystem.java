@@ -28,9 +28,9 @@ public class WorldInitSystem extends Manager {
 
 //		entityFactory.createToy("alien", vect3.add(0, -4, 0), false);
 
-		Entity airplane = entityFactory.createToy("airplane", vect3.set(0.5f, 2f, -6.4f), true);
-		Entity alien = entityFactory.createToy("alien", vect3.set(8.5f, 12f, -9.4f), true);
-		Entity workbench = entityFactory.createToy("workbench", vect3.set(18.5f, 2f, -5.4f), false);
+		Entity airplane = entityFactory.createToy("airplane", vect3.set(0.5f, 2f, -6.4f), true, 2);
+		Entity alien = entityFactory.createToy("alien", vect3.set(8.5f, 12f, -9.4f), true, 2);
+		Entity workbench = entityFactory.createToy("workbench", vect3.set(18.5f, 2f, -5.4f), false, 2);
 
 
 		// TODO create furniture, obstacles, etc.

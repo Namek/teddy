@@ -18,6 +18,7 @@ import org.ode4j.ode.DGeom;
 import org.ode4j.ode.DGeom.DNearCallback;
 import org.ode4j.ode.DJoint;
 import org.ode4j.ode.DJointGroup;
+import org.ode4j.ode.DMass;
 import org.ode4j.ode.DSpace;
 import org.ode4j.ode.DWorld;
 import org.ode4j.ode.OdeConstants;
@@ -57,7 +58,7 @@ public class PhysicsSystem extends EntityProcessingSystem {
 	public void initialize() {
 		OdeHelper.initODE2(0);
 		physics = OdeHelper.createWorld();
-		physics.setGravity(0, -9.81, 0);
+		physics.setGravity(0, -20.81, 0);
 		physics.setLinearDamping(0.01);
 		space = OdeHelper.createHashSpace(null);
 		contactGroup = OdeHelper.createJointGroup();
@@ -107,13 +108,20 @@ public class PhysicsSystem extends EntityProcessingSystem {
 		physical.body = OdeHelper.createBody(physics);
 		physical.body.setData(edit.getEntityId());
 
+		// in this game objects don't rotate
+		physical.body.setAngularDamping(1);
+
 		return physical;
 	}
 
-	public Physical initEntity(EntityEdit edit, Dimensions dims) {
+	public Physical initEntity(EntityEdit edit, Dimensions dims, float density) {
 		Physical physical = initEntity(edit);
 		DBox box = OdeHelper.createBox(dims.getWidth(), dims.getHeight(), dims.getDepth());
 		box.setBody(physical.body);
+
+		DMass mass = OdeHelper.createMass();
+		mass.setBox(density, box.getLengths());
+		physical.body.setMass(mass);
 
 		addToSpace(box);
 

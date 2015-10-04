@@ -21,7 +21,9 @@ import net.namekdev.mgame.enums.RenderLayers;
 import net.namekdev.mgame.systems.RenderSystem;
 import net.namekdev.mgame.systems.base.physics.PhysicsSystem;
 
+import org.ode4j.ode.DBody;
 import org.ode4j.ode.DBox;
+import org.ode4j.ode.DMass;
 import org.ode4j.ode.OdeHelper;
 
 import com.artemis.Entity;
@@ -102,11 +104,12 @@ public class EntityFactory extends Manager {
 
 		setupDecal(teddyEdit, animStandingFrames[0]);
 
-		physicsSystem.initEntity(teddyEdit, mDimensions.get(teddyEdit.getEntity()))
-			.position(position).groups(CollisionGroups.TEDDY);
+		DBody body = physicsSystem.initEntity(teddyEdit, mDimensions.get(teddyEdit.getEntity()), MConstants.Teddy.Mass)
+			.position(position).groups(CollisionGroups.TEDDY)
+			.body;
 	}
 
-	public Entity createToy(String name, Vector3 position, boolean isCarryable) {
+	public Entity createToy(String name, Vector3 position, boolean isCarryable, float mass) {
 		TextureRegion texture = toysAtlas.findRegion(name);
 		EntityEdit edit = world.createEntity().edit();
 		edit.create(Transform.class).xyz(position);
@@ -121,7 +124,7 @@ public class EntityFactory extends Manager {
 		setupDecal(edit, texture);
 
 		Dimensions dims = edit.getEntity().getComponent(Dimensions.class);
-		Physical physical = physicsSystem.initEntity(edit, dims).groups(CollisionGroups.TOYS);
+		Physical physical = physicsSystem.initEntity(edit, dims, mass).groups(CollisionGroups.TOYS);
 		physical.body.setPosition(position.x, position.y, position.z);
 
 		return edit.getEntity();
