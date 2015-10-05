@@ -6,7 +6,7 @@ public interface MConstants {
 
 	public interface Teddy {
 		public static final float Mass = 20f;
-		public static final float Acceleration = 160f;
+		public static final float Acceleration = 960f;
 		public static final float MaxWalkSpeed = 6f;
 		public static final float MaxRunSpeed = MaxWalkSpeed*2.2f;
 		public static final float MaxJumpSpeed = MaxWalkSpeed*2.7f;

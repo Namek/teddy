@@ -1,5 +1,7 @@
 package net.namekdev.mgame.systems.base.physics;
 
+import static org.ode4j.ode.OdeConstants.*;
+
 import net.mostlyoriginal.api.plugin.extendedcomponentmapper.M;
 import net.namekdev.mgame.components.Physical;
 import net.namekdev.mgame.components.base.Dimensions;
@@ -149,22 +151,27 @@ public class PhysicsSystem extends EntityProcessingSystem {
 				return;
 			}
 
-			final int N = contactBufferPool.bufferSize;
-			ContactBuffer buffer = contactBufferPool.getNext();
-			DContactBuffer contacts = buffer.buffer;
+//			final int N = contactBufferPool.bufferSize;
+//			ContactBuffer buffer = contactBufferPool.getNext();
+//			DContactBuffer contacts = buffer.buffer;
+
+			final int N = 4;
+			DContactBuffer contacts = new DContactBuffer(N);
 
 			int n = OdeHelper.collide(o1, o2, N, contacts.getGeomBuffer());
-			assert buffer.lastUsedContacts == 0;
-			buffer.lastUsedContacts = n;
+//			assert buffer.lastUsedContacts == 0;
+//			buffer.lastUsedContacts = n;
 
 			for (int i = 0; i < n; ++i) {
 				DContact contact = contacts.get(i);
 
 				// TODO get parameters for this group relation
-				contact.surface.mode = OdeConstants.dContactBounce;
-				contact.surface.mu = 1;
+				contact.surface.mode = dContactBounce | dContactMu2 | dContactSoftERP;
+				contact.surface.mu = 100;
+				contact.surface.mu2 = 1000000000;
 				contact.surface.bounce = 0.3;
 				contact.surface.bounce_vel = 2;
+				contact.surface.soft_erp = 0.5;
 
 				DJoint c = OdeHelper.createContactJoint(physics, contactGroup, contact);
 				c.attach(contact.geom.g1.getBody(), contact.geom.g2.getBody());

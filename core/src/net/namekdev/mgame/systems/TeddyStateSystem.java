@@ -157,6 +157,8 @@ public class TeddyStateSystem extends EntityProcessingSystem {
 		physical.body.addForce(force.accelForce.x, force.accelForce.y, force.accelForce.z);
 		physical.body.addForce(force.extForce.x, force.extForce.y, force.extForce.z);
 
+		physical.body.setAngularDamping(1);
+		physical.body.setMaxAngularSpeed(0);
 
 		if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
 			physical.body.setForce(0, 4650, 0);

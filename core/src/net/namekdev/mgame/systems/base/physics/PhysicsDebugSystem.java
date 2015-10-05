@@ -1,5 +1,7 @@
 package net.namekdev.mgame.systems.base.physics;
 
+import static net.namekdev.mgame.utils.MathUtils.*;
+
 import net.mostlyoriginal.api.plugin.extendedcomponentmapper.M;
 import net.namekdev.mgame.components.Physical;
 import net.namekdev.mgame.systems.RenderSystem;
@@ -7,6 +9,7 @@ import net.namekdev.mgame.systems.RenderSystem;
 import org.ode4j.math.DMatrix3C;
 import org.ode4j.math.DVector3C;
 import org.ode4j.ode.DAABBC;
+import org.ode4j.ode.DBox;
 import org.ode4j.ode.DGeom;
 
 import com.artemis.Aspect;
@@ -29,7 +32,9 @@ public class PhysicsDebugSystem extends EntityProcessingSystem {
 	RenderSystem renderSystem;
 
 	ModelBuilder mb;
+	ModelInstance box;
 	Material material;
+	ColorAttribute color;
 
 
 	public PhysicsDebugSystem() {
@@ -39,10 +44,14 @@ public class PhysicsDebugSystem extends EntityProcessingSystem {
 	@Override
 	public void initialize() {
 		mb = new ModelBuilder();
+		color = ColorAttribute.createDiffuse(0, 1, 0, 1f);
 		material = new Material(
-			ColorAttribute.createDiffuse(0, 1, 0, 1f),
+			color,
 			new BlendingAttribute(0.5f)
 		);
+
+		Model model = mb.createBox(1, 1, 1, material, Usage.Position);
+		box = new ModelInstance(model);
 	}
 
 	@Override
@@ -67,22 +76,26 @@ public class PhysicsDebugSystem extends EntityProcessingSystem {
 	private void renderGeom(DVector3C pos, DMatrix3C rot, DGeom geom) {
 		DAABBC bbox = geom.getAABB();
 
-		Model model = mb.createBox(
-			(float)bbox.len0(), (float)bbox.len1(), (float)bbox.len2(),
-			material,
-			Usage.Position | Usage.Normal
-		);
+		final DBox gbox = (DBox) geom;
+		DVector3C scale = gbox.getLengths();
 
-		ModelInstance inst = new ModelInstance(model);
-		inst.transform.setTranslation(
+		// set rotation
+		box.transform.idt();
+		copyMat(rot, box.transform);
+
+		box.transform.scale((float)scale.get0(), (float)scale.get1(), (float)scale.get2());
+		box.transform.setTranslation(
 			(float)pos.get0(),
 			(float)pos.get1(),
-			(float)pos.get2()
+			(float)pos.get2()+0.05f
 		);
 
-		// TODO use rotation
-
-		renderSystem.modelBatch.render(inst, renderSystem.environment);
+		color.color.r = (float) Math.random();
+		color.color.g = (float) Math.random();
+		color.color.b = 1f;
+		material.set(color);
+		renderSystem.modelBatch.render(box, renderSystem.environment);
+		renderSystem.modelBatch.flush();
 	}
 
 	@Override
