@@ -2,6 +2,7 @@ package net.namekdev.mgame.components;
 
 import com.artemis.Component;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Teddy extends Component {
 	public static final int STAND = 1;
@@ -19,7 +20,7 @@ public class Teddy extends Component {
 	public int lookDir = RIGHT;
 	public int moveHorzDir = NONE;
 	public int moveVertDir = NONE;
-	public Animation animStanding, animRunning, animWalking;
+	public Animation<TextureRegion> animStanding, animRunning, animWalking;
 
 	public int carriedEntityId = -1;
 }
