@@ -40,7 +40,14 @@ public class TeddyStateSystem extends EntityProcessingSystem {
 
 
 	public TeddyStateSystem() {
-		super(Aspect.all(Teddy.class));
+		super(Aspect.all(
+				Teddy.class,
+				AnimationComponent.class,
+				Transform.class,
+				Velocity.class,
+				Force.class,
+				Dimensions.class
+		));
 	}
 
 	@Override
@@ -121,8 +128,9 @@ public class TeddyStateSystem extends EntityProcessingSystem {
 		}
 
 		if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
-			force.extForce.y = transform.currentPos.y > floorHeight ? 2000 : 1000;
-			dropToy();
+			if (transform.currentPos.y <= floorHeight + 0.01f) {
+				force.extForce.y = transform.currentPos.y > floorHeight ? 2000 : 1000;
+			}
 		}
 		else {
 			force.extForce.y = transform.currentPos.y > floorHeight + 1.4f ? -60 : -1;
@@ -136,7 +144,7 @@ public class TeddyStateSystem extends EntityProcessingSystem {
 		if (hasChangedAnimDirection) {
 			anim.stateTime = 0;
 		}
-		else if (transform.currentPos.y <= floorHeight) {
+		else if (transform.currentPos.y <= floorHeight + 0.01f) {
 			anim.stateTime += world.delta;
 		}
 		else {
